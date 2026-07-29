@@ -13,6 +13,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       async authorize(credentials) {
         try {
           const apiBase = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001').replace(/\/api$/, '');
+          console.log(`[NextAuth] Fetching from: ${apiBase}/api/auth/login`);
           const res = await fetch(
             `${apiBase}/api/auth/login`,
             {
@@ -46,7 +47,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             accessToken: userData.accessToken,
             refreshToken: userData.refreshToken,
           };
-        } catch {
+        } catch (e: any) {
+          console.error('LOGIN_ERROR_DETAILS:', e.message, e.cause);
           return null;
         }
       },
