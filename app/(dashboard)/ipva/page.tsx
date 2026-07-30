@@ -136,7 +136,7 @@ export default function IpvaPage() {
 
   // Merge vehicles with their latest IPVA for the list view
   const vehicleList = (vehicles || []).map(v => {
-    const vIpvas = (ipvas || []).filter(i => i && i.vehicleId && i.vehicleId._id === v._id);
+    const vIpvas = (ipvas || []).filter((i: any) => i && i.vehicleId && i.vehicleId._id === v._id);
     const latestIpva = vIpvas.length > 0 ? vIpvas[0] : null;
     return {
       ...v,
