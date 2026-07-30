@@ -18,7 +18,7 @@ export default function VistoriasPage() {
 
   const fetchData = async () => {
     try {
-      const response = await api.get('/inspections');
+      const response = await api.get('/inspections') as any;
       setVistorias(response.data || []);
     } catch (error) {
       console.error('Failed to fetch inspections:', error);

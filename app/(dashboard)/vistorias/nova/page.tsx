@@ -32,8 +32,8 @@ export default function NovaVistoriaPage() {
     const loadData = async () => {
       try {
         const [veiculosRes, motoristasRes] = await Promise.all([
-          api.get('/vehicles'),
-          api.get('/drivers')
+          api.get('/vehicles') as any,
+          api.get('/drivers') as any
         ]);
         setVeiculos(veiculosRes.data || []);
         setMotoristas(motoristasRes.data || []);

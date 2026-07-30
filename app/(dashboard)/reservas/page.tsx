@@ -20,8 +20,8 @@ export default function ReservasPage() {
   const fetchData = async () => {
     try {
       const [reservasRes, clientesRes] = await Promise.all([
-        api.get('/reservas'), // Wait, backend endpoint is /reservations! Let me fix it immediately.
-        api.get('/customers')
+        api.get('/reservas') as any, // Wait, backend endpoint is /reservations! Let me fix it immediately.
+        api.get('/customers') as any
       ]);
       setReservas(reservasRes.data || []);
       setClientes(clientesRes.data || []);
@@ -29,8 +29,8 @@ export default function ReservasPage() {
       // Actually backend is /reservations
       try {
         const [reservasRes, clientesRes] = await Promise.all([
-          api.get('/reservations'),
-          api.get('/customers')
+          api.get('/reservations') as any,
+          api.get('/customers') as any
         ]);
         setReservas(reservasRes.data || []);
         setClientes(clientesRes.data || []);

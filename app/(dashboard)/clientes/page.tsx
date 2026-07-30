@@ -19,7 +19,7 @@ export default function ClientesPage() {
 
   const fetchClientes = async () => {
     try {
-      const response = await api.get('/customers');
+      const response = await api.get('/customers') as any;
       setClientes(response.data || []);
     } catch (error) {
       console.error('Failed to fetch customers:', error);

@@ -26,8 +26,8 @@ export default function NovaReservaPage() {
     const loadData = async () => {
       try {
         const [clientesRes, veiculosRes] = await Promise.all([
-          api.get('/customers'),
-          api.get('/vehicles')
+          api.get('/customers') as any,
+          api.get('/vehicles') as any
         ]);
         setClientes(clientesRes.data || []);
         setVeiculos(veiculosRes.data || []);
