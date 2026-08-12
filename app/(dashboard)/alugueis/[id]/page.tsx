@@ -163,7 +163,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
                 {statusLabel[rental.status] || rental.status}
               </span>
             </div>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
               Contrato registrado em {formatDate(rental.createdAt)}
             </p>
           </div>
@@ -202,19 +202,19 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
             </h3>
             <div className="space-y-3 text-sm">
               <p className="flex justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
-                <span className="text-slate-500">Nome:</span>
+                <span className="text-slate-500 dark:text-slate-400">Nome:</span>
                 <span className="font-medium text-slate-900 dark:text-white">{rental.driverId?.name}</span>
               </p>
               <p className="flex justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
-                <span className="text-slate-500">CPF:</span>
+                <span className="text-slate-500 dark:text-slate-400">CPF:</span>
                 <span className="font-medium text-slate-900 dark:text-white">{rental.driverId?.cpf}</span>
               </p>
               <p className="flex justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
-                <span className="text-slate-500">Telefone:</span>
+                <span className="text-slate-500 dark:text-slate-400">Telefone:</span>
                 <span className="font-medium text-slate-900 dark:text-white">{rental.driverId?.phone}</span>
               </p>
               <p className="flex justify-between pb-1">
-                <span className="text-slate-500">CNH:</span>
+                <span className="text-slate-500 dark:text-slate-400">CNH:</span>
                 <span className="font-medium text-slate-900 dark:text-white">{rental.driverId?.licenseNumber}</span>
               </p>
             </div>
@@ -227,23 +227,23 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
             </h3>
             <div className="space-y-3 text-sm">
               <p className="flex justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
-                <span className="text-slate-500">Placa:</span>
+                <span className="text-slate-500 dark:text-slate-400">Placa:</span>
                 <span className="font-medium text-slate-900 dark:text-white">{rental.vehicleId?.licensePlate}</span>
               </p>
               <p className="flex justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
-                <span className="text-slate-500">Veículo:</span>
+                <span className="text-slate-500 dark:text-slate-400">Veículo:</span>
                 <span className="font-medium text-slate-900 dark:text-white">{rental.vehicleId?.brand} {rental.vehicleId?.model}</span>
               </p>
               <p className="flex justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
-                <span className="text-slate-500">Cor:</span>
+                <span className="text-slate-500 dark:text-slate-400">Cor:</span>
                 <span className="font-medium text-slate-900 dark:text-white">{rental.vehicleId?.color}</span>
               </p>
               <p className="flex justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
-                <span className="text-slate-500">Ano:</span>
+                <span className="text-slate-500 dark:text-slate-400">Ano:</span>
                 <span className="font-medium text-slate-900 dark:text-white">{rental.vehicleId?.year}</span>
               </p>
               <p className="flex justify-between pb-1">
-                <span className="text-slate-500">KM Atual:</span>
+                <span className="text-slate-500 dark:text-slate-400">KM Atual:</span>
                 <span className="font-medium text-slate-900 dark:text-white">
                   {rental.mileageLogs?.length > 0 
                     ? `${rental.mileageLogs[rental.mileageLogs.length - 1].newMileage} km` 
@@ -295,21 +295,21 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="rounded-lg bg-slate-50 p-4 dark:bg-slate-800/50">
-                <p className="text-xs text-slate-500">Data de Início</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Data de Início</p>
                 <p className="mt-1 font-semibold text-slate-900 dark:text-white">{formatDate(rental.startDate)}</p>
               </div>
               <div className="rounded-lg bg-slate-50 p-4 dark:bg-slate-800/50">
-                <p className="text-xs text-slate-500">Data Fim Prevista</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Data Fim Prevista</p>
                 <p className="mt-1 font-semibold text-slate-900 dark:text-white">
                   {rental.expectedEndDate ? formatDate(rental.expectedEndDate) : 'Indeterminado'}
                 </p>
               </div>
               <div className="rounded-lg bg-slate-50 p-4 dark:bg-slate-800/50">
-                <p className="text-xs text-slate-500">Valor Acordado</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Valor Acordado</p>
                 <p className="mt-1 font-semibold text-blue-600 dark:text-blue-400">{formatCurrency(rental.rentalAmount)}</p>
               </div>
               <div className="rounded-lg bg-slate-50 p-4 dark:bg-slate-800/50">
-                <p className="text-xs text-slate-500">Periodicidade</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Periodicidade</p>
                 <p className="mt-1 font-semibold text-slate-900 dark:text-white">{frequencyLabel[rental.paymentFrequency] || rental.paymentFrequency}</p>
               </div>
             </div>
@@ -329,7 +329,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
                       <p className="text-sm font-medium text-slate-900 dark:text-white">
                         Parcela {index + 1} • {formatCurrency(payment.amount)}
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
                         Vencimento: {formatDate(payment.dueDate)}
                       </p>
                     </div>
