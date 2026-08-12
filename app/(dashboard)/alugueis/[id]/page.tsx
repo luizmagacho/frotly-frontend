@@ -40,11 +40,21 @@ const paymentStatusLabel: Record<string, string> = {
   OVERDUE: 'Atrasado',
 };
 
+const frequencyLabel: Record<string, string> = {
+  DAILY: 'Diário',
+  WEEKLY: 'Semanal',
+  BIWEEKLY: 'Quinzenal',
+  MONTHLY: 'Mensal',
+};
+
 export default function RentalDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const resolvedParams = use(params);
   const rentalId = resolvedParams.id;
+
+  const [isUpdatingMileage, setIsUpdatingMileage] = useState(false);
+  const [newMileage, setNewMileage] = useState('');
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['rental', rentalId],
@@ -75,6 +85,22 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
     },
     onError: () => {
       toast.error('Erro ao registrar pagamento.');
+    }
+  });
+
+  const recordMileageMutation = useMutation({
+    mutationFn: (mileage: number) => api.put(`/rentals/${rentalId}/mileage`, {
+      newMileage: mileage,
+      date: new Date().toISOString(),
+    }),
+    onSuccess: () => {
+      toast.success('Quilometragem atualizada com sucesso!');
+      setIsUpdatingMileage(false);
+      setNewMileage('');
+      queryClient.invalidateQueries({ queryKey: ['rental', rentalId] });
+    },
+    onError: (err: any) => {
+      toast.error(err.message || 'Erro ao atualizar quilometragem.');
     }
   });
 
@@ -197,10 +223,50 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
                 <span className="text-slate-500">Cor:</span>
                 <span className="font-medium text-slate-900 dark:text-white">{rental.vehicleId?.color}</span>
               </p>
-              <p className="flex justify-between pb-1">
+              <p className="flex justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
                 <span className="text-slate-500">Ano:</span>
                 <span className="font-medium text-slate-900 dark:text-white">{rental.vehicleId?.year}</span>
               </p>
+              <p className="flex justify-between pb-1">
+                <span className="text-slate-500">KM Atual:</span>
+                <span className="font-medium text-slate-900 dark:text-white">
+                  {rental.mileageLogs?.length > 0 
+                    ? `${rental.mileageLogs[rental.mileageLogs.length - 1].newMileage} km` 
+                    : `${rental.vehicleId?.mileage || 0} km`}
+                </span>
+              </p>
+              
+              {isUpdatingMileage ? (
+                <div className="mt-2 flex items-center gap-2">
+                  <input
+                    type="number"
+                    className="w-full rounded-md border border-slate-300 px-2 py-1 text-sm dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                    placeholder="Novo KM"
+                    value={newMileage}
+                    onChange={(e) => setNewMileage(e.target.value)}
+                  />
+                  <button
+                    onClick={() => recordMileageMutation.mutate(Number(newMileage))}
+                    disabled={recordMileageMutation.isPending || !newMileage}
+                    className="rounded bg-blue-600 px-3 py-1 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    Salvar
+                  </button>
+                  <button
+                    onClick={() => setIsUpdatingMileage(false)}
+                    className="rounded bg-slate-200 px-3 py-1 text-xs font-medium text-slate-700 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-300"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              ) : rental.status === 'ATIVO' && (
+                <button
+                  onClick={() => setIsUpdatingMileage(true)}
+                  className="mt-2 w-full rounded-md border border-slate-200 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                >
+                  Atualizar Quilometragem
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -229,7 +295,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
               </div>
               <div className="rounded-lg bg-slate-50 p-4 dark:bg-slate-800/50">
                 <p className="text-xs text-slate-500">Periodicidade</p>
-                <p className="mt-1 font-semibold text-slate-900 dark:text-white">{rental.paymentFrequency}</p>
+                <p className="mt-1 font-semibold text-slate-900 dark:text-white">{frequencyLabel[rental.paymentFrequency] || rental.paymentFrequency}</p>
               </div>
             </div>
           </div>
@@ -265,7 +331,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
                             }
                           }}
                           disabled={recordPaymentMutation.isPending}
-                          className="text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                          className="mt-1 rounded bg-blue-50 px-2 py-1 text-xs font-medium text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
                         >
                           Marcar como Pago
                         </button>
