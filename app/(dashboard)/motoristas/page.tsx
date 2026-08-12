@@ -69,7 +69,7 @@ export default function DriversPage() {
                   <td className="px-4 py-3 text-sm text-slate-500">{formatCPF(driver.cpf)}</td>
                   <td className="px-4 py-3 text-sm text-slate-500">{driver.phone}</td>
                   <td className="px-4 py-3 text-sm"><span className={`font-medium ${driver.score >= 80 ? 'text-green-600' : driver.score >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>{driver.score}</span></td>
-                  <td className="px-4 py-3 text-sm"><span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900 dark:text-green-300">{driver.status}</span></td>
+                  <td className="px-4 py-3 text-sm"><span className={`rounded-full px-2 py-0.5 text-xs font-medium ${driver.status === 'ACTIVE' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : driver.status === 'SUSPENDED' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400'}`}>{driver.status === 'ACTIVE' ? 'Ativo' : driver.status === 'SUSPENDED' ? 'Suspenso' : 'Inativo'}</span></td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex justify-end gap-1">
                       <Link href={`/motoristas/${driver._id}`} className="rounded p-1 text-slate-400 hover:text-slate-600"><Eye className="h-4 w-4" /></Link>

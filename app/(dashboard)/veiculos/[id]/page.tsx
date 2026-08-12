@@ -7,6 +7,13 @@ import { useParams } from 'next/navigation';
 import { ArrowLeft, Edit, Car, Wallet } from 'lucide-react';
 import { formatCurrency } from '@/lib/shared-utils';
 
+const statusLabels: Record<string, string> = {
+  AVAILABLE: 'Disponível',
+  RENTED: 'Alugado',
+  MAINTENANCE: 'Em Manutenção',
+  INACTIVE: 'Inativo',
+};
+
 export default function VehicleDetailPage() {
   const params = useParams();
   const id = params.id as string;
@@ -60,7 +67,7 @@ export default function VehicleDetailPage() {
             {[
               ['Valor de Compra', vehicle.purchasePrice ? formatCurrency(vehicle.purchasePrice) : '-'],
               ['Valor FIPE', vehicle.fipeValue ? formatCurrency(vehicle.fipeValue) : '-'],
-              ['Status', vehicle.status],
+              ['Status', statusLabels[vehicle.status] || vehicle.status],
             ].map(([label, value]) => (
               <div key={label as string} className="flex justify-between">
                 <dt className="text-sm text-slate-500">{label}</dt>

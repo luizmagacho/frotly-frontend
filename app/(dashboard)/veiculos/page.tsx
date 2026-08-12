@@ -8,19 +8,17 @@ import { Plus, Search, Car, MoreVertical, Eye, Edit, Trash2 } from 'lucide-react
 import { toast } from 'sonner';
 
 const statusColors: Record<string, string> = {
-  DISPONIVEL: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
-  ALUGADO: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
-  EM_MANUTENCAO: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
-  INATIVO: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
-  VENDIDO: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
+  AVAILABLE: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  RENTED: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  MAINTENANCE: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+  INACTIVE: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400',
 };
 
 const statusLabels: Record<string, string> = {
-  DISPONIVEL: 'Disponível',
-  ALUGADO: 'Alugado',
-  EM_MANUTENCAO: 'Em Manutenção',
-  INATIVO: 'Inativo',
-  VENDIDO: 'Vendido',
+  AVAILABLE: 'Disponível',
+  RENTED: 'Alugado',
+  MAINTENANCE: 'Em Manutenção',
+  INACTIVE: 'Inativo',
 };
 
 export default function VehiclesPage() {

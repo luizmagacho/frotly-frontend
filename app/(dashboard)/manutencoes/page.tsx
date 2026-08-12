@@ -11,8 +11,17 @@ const typeLabels: Record<string, string> = {
   PREVENTIVA: 'Preventiva', CORRETIVA: 'Corretiva', REVISAO: 'Revisão', SINISTRO: 'Sinistro',
 };
 const statusColors: Record<string, string> = {
-  AGENDADA: 'bg-blue-100 text-blue-700', EM_ANDAMENTO: 'bg-yellow-100 text-yellow-700',
-  CONCLUIDA: 'bg-green-100 text-green-700', CANCELADA: 'bg-red-100 text-red-700',
+  SCHEDULED: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  IN_PROGRESS: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+  COMPLETED: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  CANCELLED: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+};
+
+const statusLabels: Record<string, string> = {
+  SCHEDULED: 'Agendado',
+  IN_PROGRESS: 'Em Andamento',
+  COMPLETED: 'Concluído',
+  CANCELLED: 'Cancelado',
 };
 
 export default function MaintenancePage() {
@@ -63,7 +72,7 @@ export default function MaintenancePage() {
                   <td className="px-4 py-3 text-sm text-slate-500">{typeLabels[m.type] || m.type}</td>
                   <td className="px-4 py-3 text-sm text-slate-500 max-w-xs truncate">{m.description}</td>
                   <td className="px-4 py-3 text-sm font-medium text-slate-900 dark:text-white">{formatCurrency(m.totalCost || 0)}</td>
-                  <td className="px-4 py-3"><span className={`rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[m.status] || ''}`}>{m.status}</span></td>
+                  <td className="px-4 py-3"><span className={`rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[m.status] || ''}`}>{statusLabels[m.status] || m.status}</span></td>
                   <td className="px-4 py-3 text-right">
                     <Link href={`/manutencoes/${m._id}`} className="rounded p-1 text-slate-400 hover:text-slate-600"><Eye className="h-4 w-4" /></Link>
                   </td>
