@@ -52,7 +52,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
   });
 
   const terminateMutation = useMutation({
-    mutationFn: () => api.post(`/rentals/${rentalId}/terminate`, {}),
+    mutationFn: () => api.put(`/rentals/${rentalId}/terminate`, {}),
     onSuccess: () => {
       toast.success('Aluguel encerrado com sucesso!');
       queryClient.invalidateQueries({ queryKey: ['rental', rentalId] });
@@ -64,7 +64,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
   });
 
   const recordPaymentMutation = useMutation({
-    mutationFn: (paymentId: string) => api.post(`/rentals/${rentalId}/payments`, {
+    mutationFn: (paymentId: string) => api.put(`/rentals/${rentalId}/payment`, {
       paymentId,
       paidAt: new Date().toISOString(),
       paymentMethod: 'PIX', // default for now
@@ -86,7 +86,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
     );
   }
 
-  if (error || !data?.data) {
+  if (error || !data) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <AlertTriangle className="mb-4 h-12 w-12 text-red-500" />
@@ -99,7 +99,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
     );
   }
 
-  const rental = data.data;
+  const rental = data;
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
