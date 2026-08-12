@@ -172,9 +172,17 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
         {rental.status === 'ACTIVE' && (
           <button
             onClick={() => {
-              if (window.confirm('Tem certeza que deseja encerrar este contrato de aluguel? O veículo ficará disponível novamente.')) {
-                terminateMutation.mutate();
-              }
+              toast('Encerrar contrato', {
+                description: 'Tem certeza? O veículo ficará disponível novamente.',
+                action: {
+                  label: 'Sim, encerrar',
+                  onClick: () => terminateMutation.mutate(),
+                },
+                cancel: {
+                  label: 'Cancelar',
+                  onClick: () => console.log('Cancelado'),
+                },
+              });
             }}
             className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
             disabled={terminateMutation.isPending}
@@ -333,9 +341,17 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
                       {payment.status !== 'PAID' && rental.status === 'ACTIVE' && (
                         <button
                           onClick={() => {
-                            if (window.confirm('Confirmar o recebimento desta parcela?')) {
-                              recordPaymentMutation.mutate(payment._id);
-                            }
+                            toast('Confirmar Pagamento', {
+                              description: 'Registrar o recebimento desta parcela?',
+                              action: {
+                                label: 'Confirmar',
+                                onClick: () => recordPaymentMutation.mutate(payment._id),
+                              },
+                              cancel: {
+                                label: 'Cancelar',
+                                onClick: () => console.log('Cancelado'),
+                              },
+                            });
                           }}
                           disabled={recordPaymentMutation.isPending}
                           className="mt-1 rounded bg-blue-50 px-2 py-1 text-xs font-medium text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
