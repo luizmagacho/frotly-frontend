@@ -22,10 +22,17 @@ import Link from 'next/link';
 import { formatCurrency, formatDate } from '@/lib/shared-utils';
 
 const statusColors: Record<string, string> = {
-  ATIVO: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  ENCERRADO: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400',
-  PENDENTE: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-  CANCELADO: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+  ACTIVE: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  COMPLETED: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400',
+  OVERDUE: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+  CANCELLED: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+};
+
+const statusLabel: Record<string, string> = {
+  ACTIVE: 'Ativo',
+  COMPLETED: 'Encerrado',
+  OVERDUE: 'Atrasado',
+  CANCELLED: 'Cancelado',
 };
 
 const paymentStatusColors: Record<string, string> = {
@@ -153,7 +160,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
                 Detalhes do Aluguel
               </h1>
               <span className={`rounded-full px-3 py-1 text-xs font-medium ${statusColors[rental.status] || ''}`}>
-                {rental.status}
+                {statusLabel[rental.status] || rental.status}
               </span>
             </div>
             <p className="text-sm text-slate-500">
@@ -162,7 +169,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
           </div>
         </div>
 
-        {rental.status === 'ATIVO' && (
+        {rental.status === 'ACTIVE' && (
           <button
             onClick={() => {
               if (window.confirm('Tem certeza que deseja encerrar este contrato de aluguel? O veículo ficará disponível novamente.')) {
@@ -323,7 +330,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
                         {paymentStatusLabel[payment.status] || payment.status}
                       </span>
                       
-                      {payment.status !== 'PAID' && rental.status === 'ATIVO' && (
+                      {payment.status !== 'PAID' && rental.status === 'ACTIVE' && (
                         <button
                           onClick={() => {
                             if (window.confirm('Confirmar o recebimento desta parcela?')) {

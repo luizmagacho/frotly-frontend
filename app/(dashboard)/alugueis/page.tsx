@@ -8,8 +8,17 @@ import { Plus, Search, FileText, Eye } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/shared-utils';
 
 const statusColors: Record<string, string> = {
-  ATIVO: 'bg-green-100 text-green-700', ENCERRADO: 'bg-slate-100 text-slate-700',
-  PENDENTE: 'bg-yellow-100 text-yellow-700', CANCELADO: 'bg-red-100 text-red-700',
+  ACTIVE: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  COMPLETED: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400',
+  OVERDUE: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+  CANCELLED: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+};
+
+const statusLabel: Record<string, string> = {
+  ACTIVE: 'Ativo',
+  COMPLETED: 'Encerrado',
+  OVERDUE: 'Atrasado',
+  CANCELLED: 'Cancelado',
 };
 
 export default function RentalsPage() {
@@ -37,8 +46,8 @@ export default function RentalsPage() {
       <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
         className="rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-white">
         <option value="">Todos</option>
-        <option value="ATIVO">Ativos</option><option value="ENCERRADO">Encerrados</option>
-        <option value="PENDENTE">Pendentes</option><option value="CANCELADO">Cancelados</option>
+        <option value="ACTIVE">Ativos</option><option value="COMPLETED">Encerrados</option>
+        <option value="OVERDUE">Atrasados</option><option value="CANCELLED">Cancelados</option>
       </select>
 
       {isLoading ? (
@@ -71,7 +80,7 @@ export default function RentalsPage() {
                   <p className="text-xs text-slate-500">Início: {formatDate(rental.startDate)}</p>
                 </div>
                 <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[rental.status] || ''}`}>
-                  {rental.status}
+                  {statusLabel[rental.status] || rental.status}
                 </span>
                 <Eye className="h-5 w-5 text-slate-400" />
               </div>
