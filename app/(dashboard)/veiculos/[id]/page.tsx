@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Edit, Car, Wallet } from 'lucide-react';
 import { formatCurrency } from '@/lib/shared-utils';
 
@@ -16,6 +16,7 @@ const statusLabels: Record<string, string> = {
 
 export default function VehicleDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const id = params.id as string;
 
   const { data, isLoading } = useQuery({
@@ -32,9 +33,9 @@ export default function VehicleDetailPage() {
     <div className="mx-auto max-w-4xl space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/veiculos" className="rounded-lg p-2 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <button onClick={() => router.back()} className="rounded-lg p-2 hover:bg-slate-100 dark:hover:bg-slate-800">
             <ArrowLeft className="h-5 w-5 text-slate-500" />
-          </Link>
+          </button>
           <div>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{vehicle.brand} {vehicle.model}</h1>
             <p className="text-sm text-slate-500">{vehicle.plate} • {vehicle.year}/{vehicle.modelYear}</p>

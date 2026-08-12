@@ -149,7 +149,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => router.push('/alugueis')}
+            onClick={() => router.back()}
             className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-300"
           >
             <ArrowLeft className="h-5 w-5" />
