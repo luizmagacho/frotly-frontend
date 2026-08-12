@@ -90,8 +90,17 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <AlertTriangle className="mb-4 h-12 w-12 text-red-500" />
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Aluguel não encontrado</h2>
-        <p className="mt-2 text-slate-500">O contrato que você está procurando não existe ou foi removido.</p>
+        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Aluguel não encontrado ou Erro</h2>
+        <p className="mt-2 text-slate-500">O contrato que você está procurando não existe ou ocorreu um erro.</p>
+        <pre className="mt-4 p-4 bg-slate-100 rounded text-xs text-left max-w-full overflow-auto">
+          {JSON.stringify({ 
+            rentalId,
+            error: error ? error.message : null, 
+            dataIsNull: data === null,
+            dataIsUndefined: data === undefined,
+            dataType: typeof data
+          }, null, 2)}
+        </pre>
         <button onClick={() => router.back()} className="mt-6 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
           Voltar
         </button>
@@ -99,7 +108,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
     );
   }
 
-  const rental = data;
+  const rental = data.data || data; // Just in case it's wrapped
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
