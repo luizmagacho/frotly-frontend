@@ -35,8 +35,8 @@ export default function RefuelsPage() {
         api.get<any>('/refuels'),
         api.get<any>('/vehicles')
       ]);
-      setRefuels(refuelsRes.data);
-      setVehicles(vehiclesRes.data);
+      setRefuels(refuelsRes.data?.data || refuelsRes.data || []);
+      setVehicles(vehiclesRes.data?.data || vehiclesRes.data || []);
     } catch (error) {
       toast.error('Erro ao carregar dados');
       console.error(error);
