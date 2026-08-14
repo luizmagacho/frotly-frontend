@@ -249,11 +249,11 @@ export default function DashboardPage() {
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-slate-100 text-xs font-semibold uppercase text-slate-400 dark:border-slate-800">
-                  <th className="py-3 px-4">Motorista / Veículo</th>
-                  <th className="py-3 px-4">Vencimento</th>
-                  <th className="py-3 px-4">Valor</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4 text-right">Ação</th>
+                  <th className="py-3 px-4 text-slate-500 dark:text-slate-400">Motorista / Veículo</th>
+                  <th className="py-3 px-4 text-slate-500 dark:text-slate-400">Vencimento</th>
+                  <th className="py-3 px-4 text-slate-500 dark:text-slate-400">Valor</th>
+                  <th className="py-3 px-4 text-slate-500 dark:text-slate-400">Status</th>
+                  <th className="py-3 px-4 text-right text-slate-500 dark:text-slate-400">Ação</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">

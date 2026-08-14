@@ -39,11 +39,11 @@ export default function ClientesPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-2">
-            <Users className="h-8 w-8 text-blue-400" />
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+            <Users className="h-8 w-8 text-blue-500 dark:text-blue-400" />
             Clientes
           </h1>
-          <p className="text-gray-400 mt-2">
+          <p className="text-slate-500 dark:text-slate-400 mt-2">
             Gerencie as pessoas físicas e jurídicas cadastradas
           </p>
         </div>
@@ -58,32 +58,32 @@ export default function ClientesPage() {
 
       <div className="flex gap-4 items-center">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
           <input
             type="text"
             placeholder="Buscar por nome, documento ou e-mail..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
 
-      <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden backdrop-blur-sm">
+      <div className="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm dark:shadow-none backdrop-blur-sm">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-800/50">
+            <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-400">Cliente</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-400">Contato</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-400">Endereço</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-400">Status</th>
+                <th className="px-6 py-4 text-left text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Cliente</th>
+                <th className="px-6 py-4 text-left text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Contato</th>
+                <th className="px-6 py-4 text-left text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Endereço</th>
+                <th className="px-6 py-4 text-left text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/50">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800/50">
               {loading ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-gray-400">
+                  <td colSpan={4} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
                     <div className="flex flex-col items-center gap-2">
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                       Carregando clientes...
@@ -92,38 +92,38 @@ export default function ClientesPage() {
                 </tr>
               ) : filteredClientes.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-gray-400">
+                  <td colSpan={4} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
                     <div className="flex flex-col items-center gap-2">
-                      <Users className="h-12 w-12 text-gray-600" />
+                      <Users className="h-12 w-12 text-slate-400 dark:text-slate-600" />
                       Nenhum cliente encontrado
                     </div>
                   </td>
                 </tr>
               ) : (
                 filteredClientes.map((cliente) => (
-                  <tr key={cliente._id} className="hover:bg-slate-800/20 transition-colors">
+                  <tr key={cliente._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg ${cliente.type === 'PJ' ? 'bg-purple-500/20 text-purple-400' : 'bg-emerald-500/20 text-emerald-400'}`}>
+                        <div className={`p-2 rounded-lg ${cliente.type === 'PJ' ? 'bg-purple-100 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400' : 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400'}`}>
                           {cliente.type === 'PJ' ? <Building2 className="h-5 w-5" /> : <User className="h-5 w-5" />}
                         </div>
                         <div>
-                          <p className="text-white font-medium">{cliente.name}</p>
-                          <p className="text-sm text-gray-400">{cliente.document}</p>
+                          <p className="text-slate-900 dark:text-white font-medium">{cliente.name}</p>
+                          <p className="text-sm text-slate-500 dark:text-slate-400">{cliente.document}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="space-y-1">
                         {cliente.email && (
-                          <div className="flex items-center gap-2 text-sm text-gray-300">
-                            <Mail className="h-4 w-4 text-gray-500" />
+                          <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                            <Mail className="h-4 w-4 text-slate-400 dark:text-slate-500" />
                             {cliente.email}
                           </div>
                         )}
                         {cliente.phone && (
-                          <div className="flex items-center gap-2 text-sm text-gray-300">
-                            <Phone className="h-4 w-4 text-gray-500" />
+                          <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                            <Phone className="h-4 w-4 text-slate-400 dark:text-slate-500" />
                             {cliente.phone}
                           </div>
                         )}
@@ -131,19 +131,19 @@ export default function ClientesPage() {
                     </td>
                     <td className="px-6 py-4">
                       {cliente.address?.city && cliente.address?.state ? (
-                        <div className="flex items-center gap-2 text-sm text-gray-300">
-                          <MapPin className="h-4 w-4 text-gray-500" />
+                        <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                          <MapPin className="h-4 w-4 text-slate-400 dark:text-slate-500" />
                           {cliente.address.city} - {cliente.address.state}
                         </div>
                       ) : (
-                        <span className="text-sm text-gray-500">-</span>
+                        <span className="text-sm text-slate-500 dark:text-slate-500">-</span>
                       )}
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${
                         cliente.status === 'ACTIVE' 
-                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                          : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20'
+                          : 'bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-400 border border-red-200 dark:border-red-500/20'
                       }`}>
                         {cliente.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
                       </span>

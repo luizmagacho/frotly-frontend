@@ -58,12 +58,12 @@ export default function MaintenancePage() {
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
           <table className="w-full">
             <thead><tr className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50">
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-slate-500">Veículo</th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-slate-500">Tipo</th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-slate-500">Descrição</th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-slate-500">Custo</th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-slate-500">Status</th>
-              <th className="px-4 py-3 text-right text-xs font-medium uppercase text-slate-500">Ações</th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Veículo</th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Tipo</th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Descrição</th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Custo</th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Status</th>
+              <th className="px-4 py-3 text-right text-xs font-medium uppercase text-slate-500 dark:text-slate-400">Ações</th>
             </tr></thead>
             <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
               {maintenances.map((m: any) => (

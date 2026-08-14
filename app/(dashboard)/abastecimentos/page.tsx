@@ -188,13 +188,13 @@ export default function RefuelsPage() {
           <table className="w-full text-left text-sm">
             <thead className="bg-slate-50 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400">
               <tr>
-                <th className="px-6 py-4 font-medium">Veículo</th>
-                <th className="px-6 py-4 font-medium">Data</th>
-                <th className="px-6 py-4 font-medium">Combustível</th>
-                <th className="px-6 py-4 font-medium">Litros</th>
-                <th className="px-6 py-4 font-medium">Valor Total</th>
-                <th className="px-6 py-4 font-medium">Hodômetro</th>
-                <th className="px-6 py-4 font-medium"></th>
+                <th className="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">Veículo</th>
+                <th className="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">Data</th>
+                <th className="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">Combustível</th>
+                <th className="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">Litros</th>
+                <th className="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">Valor Total</th>
+                <th className="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">Hodômetro</th>
+                <th className="px-6 py-4 font-medium text-slate-500 dark:text-slate-400"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 dark:divide-slate-700">

@@ -183,11 +183,11 @@ export default function IpvaPage() {
           <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
             <thead className="border-b border-slate-200 bg-slate-50/50 text-xs uppercase text-slate-500 dark:border-slate-800 dark:bg-slate-800/50 dark:text-slate-400">
               <tr>
-                <th className="px-6 py-4 font-medium">Veículo</th>
-                <th className="px-6 py-4 font-medium">Situação IPVA (Atual)</th>
-                <th className="px-6 py-4 font-medium">Valor Total</th>
-                <th className="px-6 py-4 font-medium">Parcelas</th>
-                <th className="px-6 py-4 font-medium text-right">Ações</th>
+                <th className="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">Veículo</th>
+                <th className="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">Situação IPVA (Atual)</th>
+                <th className="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">Valor Total</th>
+                <th className="px-6 py-4 font-medium text-slate-500 dark:text-slate-400">Parcelas</th>
+                <th className="px-6 py-4 font-medium text-right text-slate-500 dark:text-slate-400">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 dark:divide-slate-800">

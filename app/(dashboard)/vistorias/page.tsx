@@ -70,11 +70,11 @@ export default function VistoriasPage() {
           <table className="w-full">
             <thead className="bg-slate-800/50">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-400">Tipo / Data</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-400">Veículo</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-400">Motorista</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-400">Hodômetro</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-400">Vistoriador</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-slate-500 dark:text-slate-400">Tipo / Data</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-slate-500 dark:text-slate-400">Veículo</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-slate-500 dark:text-slate-400">Motorista</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-slate-500 dark:text-slate-400">Hodômetro</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-slate-500 dark:text-slate-400">Vistoriador</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/50">
