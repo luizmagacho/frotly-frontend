@@ -16,7 +16,8 @@ import {
   XCircle,
   Clock,
   AlertTriangle,
-  Receipt
+  Receipt,
+  Trash2
 } from 'lucide-react';
 import Link from 'next/link';
 import { formatCurrency, formatDate } from '@/lib/shared-utils';
@@ -77,6 +78,18 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
     },
     onError: () => {
       toast.error('Erro ao encerrar aluguel.');
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => api.delete(`/rentals/${rentalId}`),
+    onSuccess: () => {
+      toast.success('Aluguel excluído com sucesso!');
+      queryClient.invalidateQueries({ queryKey: ['rentals'] });
+      router.push('/alugueis');
+    },
+    onError: () => {
+      toast.error('Erro ao excluir aluguel.');
     }
   });
 
@@ -169,27 +182,49 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
           </div>
         </div>
 
-        {rental.status === 'ACTIVE' && (
+        <div className="flex items-center gap-3">
+          {rental.status === 'ACTIVE' && (
+            <button
+              onClick={() => {
+                toast('Encerrar contrato', {
+                  description: 'Tem certeza? O veículo ficará disponível novamente.',
+                  action: {
+                    label: 'Sim, encerrar',
+                    onClick: () => terminateMutation.mutate(),
+                  },
+                  cancel: {
+                    label: 'Cancelar',
+                    onClick: () => {},
+                  },
+                });
+              }}
+              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+              disabled={terminateMutation.isPending}
+            >
+              {terminateMutation.isPending ? 'Encerrando...' : 'Encerrar Contrato'}
+            </button>
+          )}
+
           <button
             onClick={() => {
-              toast('Encerrar contrato', {
-                description: 'Tem certeza? O veículo ficará disponível novamente.',
+              toast('Excluir contrato permanentemente', {
+                description: 'Tem certeza? Isso apagará o aluguel do histórico.',
                 action: {
-                  label: 'Sim, encerrar',
-                  onClick: () => terminateMutation.mutate(),
+                  label: 'Sim, excluir',
+                  onClick: () => deleteMutation.mutate(),
                 },
                 cancel: {
                   label: 'Cancelar',
-                  onClick: () => console.log('Cancelado'),
+                  onClick: () => {},
                 },
               });
             }}
-            className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
-            disabled={terminateMutation.isPending}
+            className="flex items-center justify-center rounded-lg border border-red-200 bg-red-50 p-2 text-red-600 hover:bg-red-100 dark:border-red-900/50 dark:bg-red-900/20 dark:hover:bg-red-900/40"
+            title="Excluir Aluguel"
           >
-            {terminateMutation.isPending ? 'Encerrando...' : 'Encerrar Contrato'}
+            <Trash2 className="h-5 w-5" />
           </button>
-        )}
+        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
