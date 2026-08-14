@@ -50,7 +50,10 @@ export default function EditVehiclePage() {
   const mutation = useMutation({
     mutationFn: (data: typeof form) => api.put(`/vehicles/${id}`, data),
     onSuccess: () => { toast.success('Veículo atualizado!'); router.push('/veiculos'); },
-    onError: (err: any) => toast.error(err.response?.data?.message || err.message || 'Erro ao atualizar veículo'),
+    onError: (err: any) => {
+      const msg = err.response?.data?.message;
+      toast.error(Array.isArray(msg) ? msg[0] : (msg || err.message || 'Erro ao atualizar veículo'));
+    },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -96,15 +99,15 @@ export default function EditVehiclePage() {
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <div>
             <label className={labelClass}>Placa *</label>
-            <input className={inputClass} value={form.plate} onChange={(e) => setForm({ ...form, plate: e.target.value.toUpperCase() })} placeholder="ABC1D23" required />
+            <input className={inputClass} value={form.plate} onChange={(e) => setForm({ ...form, plate: e.target.value.toUpperCase() })} placeholder="ABC1D23" minLength={7} maxLength={8} required />
           </div>
           <div>
             <label className={labelClass}>RENAVAM *</label>
-            <input className={inputClass} value={form.renavam} onChange={(e) => setForm({ ...form, renavam: e.target.value })} placeholder="11 dígitos" required />
+            <input className={inputClass} value={form.renavam} onChange={(e) => setForm({ ...form, renavam: e.target.value.replace(/\D/g, '') })} placeholder="11 dígitos" minLength={9} maxLength={11} required />
           </div>
           <div className="md:col-span-2">
             <label className={labelClass}>Chassi *</label>
-            <input className={inputClass} value={form.chassis} onChange={(e) => setForm({ ...form, chassis: e.target.value.toUpperCase() })} placeholder="17 caracteres" required />
+            <input className={inputClass} value={form.chassis} onChange={(e) => setForm({ ...form, chassis: e.target.value.toUpperCase() })} placeholder="17 caracteres" minLength={17} maxLength={17} required />
           </div>
           <div>
             <label className={labelClass}>Marca *</label>
@@ -159,7 +162,7 @@ export default function EditVehiclePage() {
             <input 
               type="text" 
               className={inputClass} 
-              value={form.mileage ? new Intl.NumberFormat('pt-BR').format(form.mileage) : ''} 
+              value={form.mileage !== undefined && form.mileage !== null ? new Intl.NumberFormat('pt-BR').format(form.mileage) : ''} 
               onChange={handleMileageChange} 
               placeholder="Ex: 15.000" 
               required 
