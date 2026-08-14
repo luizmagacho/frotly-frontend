@@ -30,9 +30,9 @@ export default function EditDriverPage() {
       setForm({
         name: driver.name || '',
         cpf: driver.cpf || '',
-        rg: driver.rg || '',
-        cnhNumber: driver.cnhNumber || '',
-        cnhCategory: driver.cnhCategory || '',
+        rg: '',
+        cnhNumber: driver.licenseNumber || driver.cnhNumber || '',
+        cnhCategory: driver.licenseCategory || driver.cnhCategory || '',
         licenseExpiration: driver.licenseExpiration ? new Date(driver.licenseExpiration).toISOString().split('T')[0] : '',
         phone: driver.phone || '',
         email: driver.email || '',
@@ -89,10 +89,18 @@ export default function EditDriverPage() {
     if (rawPhone.length < 10) return toast.error('O telefone deve ter pelo menos 10 dígitos (com DDD).');
 
     mutation.mutate({
-      ...form,
+      name: form.name,
       cpf: rawCpf,
+      licenseNumber: form.cnhNumber,
+      licenseCategory: form.cnhCategory,
+      licenseExpiration: form.licenseExpiration ? new Date(form.licenseExpiration).toISOString() : undefined,
       phone: rawPhone,
-      licenseExpiration: form.licenseExpiration ? new Date(form.licenseExpiration).toISOString() : undefined
+      email: form.email,
+      address: form.address || undefined,
+      city: form.city || undefined,
+      zipCode: form.zipCode || undefined,
+      notes: form.notes || undefined,
+      status: form.status || 'ACTIVE',
     });
   };
 

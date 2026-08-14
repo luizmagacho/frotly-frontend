@@ -60,10 +60,18 @@ export default function NewDriverPage() {
     if (rawPhone.length < 10) return toast.error('O telefone deve ter pelo menos 10 dígitos (com DDD).');
 
     mutation.mutate({
-      ...form,
+      name: form.name,
       cpf: rawCpf,
+      licenseNumber: form.cnhNumber,
+      licenseCategory: form.cnhCategory,
+      licenseExpiration: new Date(form.licenseExpiration).toISOString(),
       phone: rawPhone,
-      licenseExpiration: new Date(form.licenseExpiration).toISOString()
+      email: form.email,
+      address: form.address || undefined,
+      city: form.city || undefined,
+      zipCode: form.zipCode || undefined,
+      notes: form.notes || undefined,
+      status: form.status || 'ACTIVE',
     });
   };
 
