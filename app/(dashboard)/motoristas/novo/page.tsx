@@ -19,13 +19,50 @@ export default function NewDriverPage() {
   const mutation = useMutation({
     mutationFn: (data: any) => api.post('/drivers', data),
     onSuccess: () => { toast.success('Motorista cadastrado!'); router.push('/motoristas'); },
-    onError: (err: any) => toast.error(err.response?.data?.message || err.message || 'Erro ao cadastrar motorista'),
+    onError: (err: any) => {
+      const msg = err.response?.data?.message;
+      toast.error(Array.isArray(msg) ? msg[0] : (msg || err.message || 'Erro ao cadastrar motorista'));
+    },
   });
+
+  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value.replace(/\D/g, '');
+    if (val.length > 11) val = val.slice(0, 11);
+    const masked = val.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})/, '$1-$2');
+    setForm({ ...form, cpf: masked });
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value.replace(/\D/g, '');
+    if (val.length > 11) val = val.slice(0, 11);
+    let masked = val;
+    if (val.length > 2) masked = `(${val.slice(0, 2)}) ${val.slice(2)}`;
+    if (val.length > 6) {
+      const isCell = val.length === 11;
+      const pt1 = val.slice(2, isCell ? 7 : 6);
+      const pt2 = val.slice(isCell ? 7 : 6);
+      masked = `(${val.slice(0, 2)}) ${pt1}-${pt2}`;
+    }
+    setForm({ ...form, phone: masked });
+  };
+
+  const handleCnhChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, cnhNumber: e.target.value.replace(/\D/g, '').slice(0, 11) });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (form.name.trim().length < 2) return toast.error('O Nome deve ter pelo menos 2 caracteres.');
+    const rawCpf = form.cpf.replace(/\D/g, '');
+    if (rawCpf.length !== 11) return toast.error('O CPF deve ter exatos 11 dígitos.');
+    if (form.cnhNumber.length < 9) return toast.error('O número da CNH deve ter entre 9 e 11 dígitos.');
+    const rawPhone = form.phone.replace(/\D/g, '');
+    if (rawPhone.length < 10) return toast.error('O telefone deve ter pelo menos 10 dígitos (com DDD).');
+
     mutation.mutate({
       ...form,
+      cpf: rawCpf,
+      phone: rawPhone,
       licenseExpiration: new Date(form.licenseExpiration).toISOString()
     });
   };
@@ -45,7 +82,7 @@ export default function NewDriverPage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+      <form onSubmit={handleSubmit} className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900" noValidate>
         <div className="mb-6 border-b border-slate-200 pb-4 dark:border-slate-800">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Dados Pessoais</h2>
         </div>
@@ -56,7 +93,7 @@ export default function NewDriverPage() {
           </div>
           <div>
             <label className={labelClass}>CPF *</label>
-            <input className={inputClass} value={form.cpf} onChange={(e) => setForm({ ...form, cpf: e.target.value.replace(/\D/g, '') })} placeholder="Somente números" required />
+            <input className={inputClass} value={form.cpf} onChange={handleCpfChange} placeholder="Ex: 123.456.789-01" required />
           </div>
           <div>
             <label className={labelClass}>RG</label>
@@ -64,7 +101,7 @@ export default function NewDriverPage() {
           </div>
           <div>
             <label className={labelClass}>Telefone *</label>
-            <input className={inputClass} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="Somente números (Ex: 11999999999)" required />
+            <input className={inputClass} value={form.phone} onChange={handlePhoneChange} placeholder="Ex: (11) 99999-9999" required />
           </div>
           <div>
             <label className={labelClass}>E-mail *</label>
@@ -78,7 +115,7 @@ export default function NewDriverPage() {
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
           <div>
             <label className={labelClass}>Número da CNH *</label>
-            <input className={inputClass} value={form.cnhNumber} onChange={(e) => setForm({ ...form, cnhNumber: e.target.value })} placeholder="Somente números" required />
+            <input className={inputClass} value={form.cnhNumber} onChange={handleCnhChange} placeholder="Somente números" required />
           </div>
           <div>
             <label className={labelClass}>Categoria *</label>
