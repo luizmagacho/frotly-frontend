@@ -56,8 +56,29 @@ export default function EditVehiclePage() {
     },
   });
 
+  const handlePlacaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, plate: e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 8) });
+  };
+
+  const handleRenavamChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, renavam: e.target.value.replace(/\D/g, '').slice(0, 11) });
+  };
+
+  const handleChassiChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, chassis: e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 17) });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (form.plate.length < 7) {
+      return toast.error('A Placa deve ter pelo menos 7 caracteres.');
+    }
+    if (form.renavam.length < 9) {
+      return toast.error('O RENAVAM deve ter entre 9 e 11 dígitos.');
+    }
+    if (form.chassis.length !== 17) {
+      return toast.error('O Chassi deve ter exatamente 17 caracteres.');
+    }
     mutation.mutate(form);
   };
 
@@ -95,19 +116,19 @@ export default function EditVehiclePage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+      <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm backdrop-blur-sm" noValidate>
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <div>
             <label className={labelClass}>Placa *</label>
-            <input className={inputClass} value={form.plate} onChange={(e) => setForm({ ...form, plate: e.target.value.toUpperCase() })} placeholder="ABC1D23" minLength={7} maxLength={8} required />
+            <input className={inputClass} value={form.plate} onChange={handlePlacaChange} placeholder="ABC1D23" required />
           </div>
           <div>
             <label className={labelClass}>RENAVAM *</label>
-            <input className={inputClass} value={form.renavam} onChange={(e) => setForm({ ...form, renavam: e.target.value.replace(/\D/g, '') })} placeholder="11 dígitos" minLength={9} maxLength={11} required />
+            <input className={inputClass} value={form.renavam} onChange={handleRenavamChange} placeholder="11 dígitos" required />
           </div>
           <div className="md:col-span-2">
             <label className={labelClass}>Chassi *</label>
-            <input className={inputClass} value={form.chassis} onChange={(e) => setForm({ ...form, chassis: e.target.value.toUpperCase() })} placeholder="17 caracteres" minLength={17} maxLength={17} required />
+            <input className={inputClass} value={form.chassis} onChange={handleChassiChange} placeholder="17 caracteres" required />
           </div>
           <div>
             <label className={labelClass}>Marca *</label>
