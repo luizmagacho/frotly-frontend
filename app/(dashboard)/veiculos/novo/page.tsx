@@ -28,6 +28,16 @@ export default function NewVehiclePage() {
     mutation.mutate(form);
   };
 
+  const handleCurrencyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '');
+    setForm({ ...form, purchasePrice: Number(value) / 100 });
+  };
+
+  const handleMileageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '');
+    setForm({ ...form, mileage: Number(value) });
+  };
+
   const inputClass = "w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-white";
   const labelClass = "mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300";
 
@@ -98,11 +108,23 @@ export default function NewVehiclePage() {
           </div>
           <div>
             <label className={labelClass}>Valor de Compra (R$)</label>
-            <input type="number" step="0.01" className={inputClass} value={form.purchasePrice} onChange={(e) => setForm({ ...form, purchasePrice: +e.target.value })} />
+            <input 
+              type="text" 
+              className={inputClass} 
+              value={new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(form.purchasePrice || 0)} 
+              onChange={handleCurrencyChange} 
+            />
           </div>
           <div>
             <label className={labelClass}>Quilometragem Atual (km) *</label>
-            <input type="number" className={inputClass} value={form.mileage} onChange={(e) => setForm({ ...form, mileage: +e.target.value })} placeholder="Ex: 15000" required />
+            <input 
+              type="text" 
+              className={inputClass} 
+              value={form.mileage ? new Intl.NumberFormat('pt-BR').format(form.mileage) : ''} 
+              onChange={handleMileageChange} 
+              placeholder="Ex: 15.000" 
+              required 
+            />
           </div>
           <div className="md:col-span-2">
             <label className={labelClass}>Observações</label>
