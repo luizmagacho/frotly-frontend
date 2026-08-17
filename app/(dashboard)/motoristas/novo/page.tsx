@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import { toast } from 'sonner';
 import Link from 'next/link';
@@ -16,9 +16,14 @@ export default function NewDriverPage() {
     address: '', city: '', zipCode: '', notes: '', status: 'ACTIVE'
   });
 
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (data: any) => api.post('/drivers', data),
-    onSuccess: () => { toast.success('Motorista cadastrado!'); router.push('/motoristas'); },
+    onSuccess: () => { 
+      queryClient.invalidateQueries({ queryKey: ['drivers'] });
+      toast.success('Motorista cadastrado!'); 
+      router.push('/motoristas'); 
+    },
     onError: (err: any) => {
       const msg = err.response?.data?.message;
       toast.error(Array.isArray(msg) ? msg[0] : (msg || err.message || 'Erro ao cadastrar motorista'));

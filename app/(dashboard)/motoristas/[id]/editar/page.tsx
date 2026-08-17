@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import { toast } from 'sonner';
 import Link from 'next/link';
@@ -45,9 +45,15 @@ export default function EditDriverPage() {
     }
   }, [data]);
 
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (data: any) => api.put(`/drivers/${id}`, data),
-    onSuccess: () => { toast.success('Motorista atualizado!'); router.push('/motoristas'); },
+    onSuccess: () => { 
+      queryClient.invalidateQueries({ queryKey: ['drivers'] });
+      queryClient.invalidateQueries({ queryKey: ['driver', id] });
+      toast.success('Motorista atualizado!'); 
+      router.push('/motoristas'); 
+    },
     onError: (err: any) => {
       const msg = err.response?.data?.message;
       toast.error(Array.isArray(msg) ? msg[0] : (msg || err.message || 'Erro ao atualizar motorista'));

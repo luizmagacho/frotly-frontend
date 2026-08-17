@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import { toast } from 'sonner';
 import Link from 'next/link';
@@ -28,9 +28,14 @@ export default function NewRentalPage() {
   const vehicles = vehiclesData?.data?.data || vehiclesData?.data || [];
   const drivers = driversData?.data?.data || driversData?.data || [];
 
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (data: any) => api.post('/rentals', data),
-    onSuccess: () => { toast.success('Contrato de aluguel criado!'); router.push('/alugueis'); },
+    onSuccess: () => { 
+      queryClient.invalidateQueries({ queryKey: ['rentals'] });
+      toast.success('Contrato de aluguel criado!'); 
+      router.push('/alugueis'); 
+    },
     onError: (err: any) => toast.error(err.response?.data?.message || err.message || 'Erro ao criar contrato'),
   });
 

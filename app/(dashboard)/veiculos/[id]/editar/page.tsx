@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import { toast } from 'sonner';
 import Link from 'next/link';
@@ -47,9 +47,15 @@ export default function EditVehiclePage() {
     }
   }, [data]);
 
+  const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: (data: typeof form) => api.put(`/vehicles/${id}`, data),
-    onSuccess: () => { toast.success('Veículo atualizado!'); router.push('/veiculos'); },
+    mutationFn: (data: any) => api.put(`/vehicles/${id}`, data),
+    onSuccess: () => { 
+      queryClient.invalidateQueries({ queryKey: ['vehicles'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicle', id] });
+      toast.success('Veículo atualizado com sucesso!'); 
+      router.push('/veiculos'); 
+    },
     onError: (err: any) => {
       const msg = err.response?.data?.message;
       toast.error(Array.isArray(msg) ? msg[0] : (msg || err.message || 'Erro ao atualizar veículo'));
