@@ -15,6 +15,7 @@ export default function NewDriverPage() {
     licenseExpiration: '', phone: '', email: '',
     address: '', city: '', zipCode: '', notes: '', status: 'ACTIVE'
   });
+  const [isFetchingCep, setIsFetchingCep] = useState(false);
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
@@ -53,6 +54,45 @@ export default function NewDriverPage() {
 
   const handleCnhChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, cnhNumber: e.target.value.replace(/\D/g, '').slice(0, 11) });
+  };
+
+  const handleRgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    if (val.length > 9) val = val.slice(0, 9);
+    let masked = val;
+    if (val.length > 2) masked = `${val.slice(0, 2)}.${val.slice(2)}`;
+    if (val.length > 5) masked = `${val.slice(0, 2)}.${val.slice(2, 5)}.${val.slice(5)}`;
+    if (val.length > 8) masked = `${val.slice(0, 2)}.${val.slice(2, 5)}.${val.slice(5, 8)}-${val.slice(8)}`;
+    setForm({ ...form, rg: masked });
+  };
+
+  const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value.replace(/\D/g, '');
+    if (val.length > 8) val = val.slice(0, 8);
+    const masked = val.replace(/(\d{5})(\d)/, '$1-$2');
+    setForm(prev => ({ ...prev, zipCode: masked }));
+
+    if (val.length === 8) {
+      setIsFetchingCep(true);
+      try {
+        const res = await fetch(`https://viacep.com.br/ws/${val}/json/`);
+        const data = await res.json();
+        if (!data.erro) {
+          setForm(prev => ({
+            ...prev,
+            address: `${data.logradouro}${data.bairro ? `, ${data.bairro}` : ''}`,
+            city: `${data.localidade} - ${data.uf}`
+          }));
+          toast.success('Endereço encontrado!');
+        } else {
+          toast.error('CEP não encontrado.');
+        }
+      } catch (error) {
+        toast.error('Erro ao buscar o CEP.');
+      } finally {
+        setIsFetchingCep(false);
+      }
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -113,7 +153,7 @@ export default function NewDriverPage() {
           </div>
           <div>
             <label className={labelClass}>RG</label>
-            <input className={inputClass} value={form.rg} onChange={(e) => setForm({ ...form, rg: e.target.value })} placeholder="Opcional" />
+            <input className={inputClass} value={form.rg} onChange={handleRgChange} placeholder="Ex: 12.345.678-9" />
           </div>
           <div>
             <label className={labelClass}>Telefone *</label>
@@ -148,12 +188,12 @@ export default function NewDriverPage() {
         </div>
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <div>
-            <label className={labelClass}>CEP</label>
-            <input className={inputClass} value={form.zipCode} onChange={(e) => setForm({ ...form, zipCode: e.target.value })} placeholder="Somente números" />
+            <label className={labelClass}>CEP {isFetchingCep && <span className="text-xs text-blue-500">(Buscando...)</span>}</label>
+            <input className={inputClass} value={form.zipCode} onChange={handleCepChange} placeholder="Ex: 01001-000" />
           </div>
           <div>
             <label className={labelClass}>Cidade</label>
-            <input className={inputClass} value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} placeholder="Ex: São Paulo" />
+            <input className={inputClass} value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} placeholder="Ex: São Paulo - SP" />
           </div>
           <div className="md:col-span-2">
             <label className={labelClass}>Endereço Completo</label>
