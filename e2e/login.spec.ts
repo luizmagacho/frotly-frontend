@@ -9,8 +9,8 @@ test.describe('Login Flow', () => {
     await expect(page.getByText('Entrar')).toBeVisible();
 
     // Fill in the login form (using the test credentials for the existing DB)
-    await page.fill('input[name="email"]', 'contato@rogercentroautomotivo.com.br');
-    await page.fill('input[name="password"]', 'Roger@123!');
+    await page.fill('input[id="email"]', 'contato@rogercentroautomotivo.com.br');
+    await page.fill('input[id="password"]', 'Roger@123!');
 
     // Click the submit button
     await page.click('button[type="submit"]');
@@ -25,8 +25,8 @@ test.describe('Login Flow', () => {
   test('should show error on invalid credentials', async ({ page }) => {
     await page.goto('/login');
     
-    await page.fill('input[name="email"]', 'contato@rogercentroautomotivo.com.br');
-    await page.fill('input[name="password"]', 'WrongPassword123!');
+    await page.fill('input[id="email"]', 'contato@rogercentroautomotivo.com.br');
+    await page.fill('input[id="password"]', 'WrongPassword123!');
     await page.click('button[type="submit"]');
 
     // NextAuth usually shows an error message or redirects with an error query param

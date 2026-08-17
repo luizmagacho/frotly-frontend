@@ -58,6 +58,9 @@ export default function NewDriverPage() {
     if (form.cnhNumber.length < 9) return toast.error('O número da CNH deve ter entre 9 e 11 dígitos.');
     const rawPhone = form.phone.replace(/\D/g, '');
     if (rawPhone.length < 10) return toast.error('O telefone deve ter pelo menos 10 dígitos (com DDD).');
+    if (!form.email || !form.email.includes('@')) return toast.error('E-mail inválido.');
+    if (!form.cnhCategory) return toast.error('A categoria da CNH é obrigatória.');
+    if (!form.licenseExpiration) return toast.error('A data de validade da CNH é obrigatória.');
 
     mutation.mutate({
       name: form.name,
@@ -90,7 +93,7 @@ export default function NewDriverPage() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900" noValidate>
+      <form onSubmit={handleSubmit} className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
         <div className="mb-6 border-b border-slate-200 pb-4 dark:border-slate-800">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Dados Pessoais</h2>
         </div>

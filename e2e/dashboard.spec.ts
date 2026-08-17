@@ -4,8 +4,8 @@ test.describe('Dashboard Flow', () => {
   // Use a beforeEach hook to login before testing dashboard features
   test.beforeEach(async ({ page }) => {
     await page.goto('/login');
-    await page.fill('input[name="email"]', 'contato@rogercentroautomotivo.com.br');
-    await page.fill('input[name="password"]', 'Roger@123!');
+    await page.fill('input[id="email"]', 'contato@rogercentroautomotivo.com.br');
+    await page.fill('input[id="password"]', 'Roger@123!');
     await page.click('button[type="submit"]');
     await page.waitForURL(/\/dashboard/);
   });

@@ -59,7 +59,7 @@ export default function RefuelsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const parsedCost = Number(totalCost.replace(/\\./g, '').replace(',', '.'));
+      const parsedCost = Number(totalCost.replace(/\./g, '').replace(',', '.'));
       const parsedVolume = Number(volume);
       const parsedMileage = Number(currentMileage);
       const pricePerUnit = parsedVolume > 0 ? parsedCost / parsedVolume : 0;
