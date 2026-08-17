@@ -69,7 +69,27 @@ class ApiClient {
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({}));
-      throw new Error(error.message || `Erro ${response.status}`);
+      
+      let errorMessage = error.message;
+      
+      // NestJS ValidationPipe can return an array of messages
+      if (Array.isArray(errorMessage)) {
+        errorMessage = errorMessage[0];
+      }
+      
+      // Filter out raw backend exceptions
+      if (typeof errorMessage === 'string') {
+        if (errorMessage.toLowerCase().includes('bad request') || errorMessage.toLowerCase().includes('internal server error')) {
+          errorMessage = 'Ocorreu um erro com os dados enviados. Verifique e tente novamente.';
+        }
+      } else {
+        errorMessage = `Erro no servidor (${response.status}). Tente novamente mais tarde.`;
+      }
+      
+      const enhancedError: any = new Error(errorMessage);
+      // Mock Axios response structure so existing UI catch blocks don't break
+      enhancedError.response = { data: { message: errorMessage, ...error } };
+      throw enhancedError;
     }
 
     if (response.status === 204) {
