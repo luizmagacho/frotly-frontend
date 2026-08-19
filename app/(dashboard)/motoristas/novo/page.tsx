@@ -108,13 +108,13 @@ export default function NewDriverPage() {
     if (!form.licenseExpiration) return toast.error('A data de validade da CNH é obrigatória.');
 
     mutation.mutate({
-      name: form.name,
+      name: form.name.trim(),
       cpf: rawCpf,
       licenseNumber: form.cnhNumber,
-      licenseCategory: form.cnhCategory,
+      licenseCategory: form.cnhCategory.trim().replace(/\s+/g, ''),
       licenseExpiration: new Date(form.licenseExpiration).toISOString(),
       phone: rawPhone,
-      email: form.email,
+      email: form.email.trim(),
       address: form.address || undefined,
       city: form.city || undefined,
       zipCode: form.zipCode || undefined,
