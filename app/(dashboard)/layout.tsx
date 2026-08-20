@@ -113,7 +113,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </span>
           </Link>
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden">
-            <X className="h-5 w-5 text-slate-500" />
+            <X className="h-5 w-5 text-slate-500 dark:text-slate-400" />
           </button>
         </div>
 
@@ -154,7 +154,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <p className="truncate text-sm font-medium text-slate-900 dark:text-white">
                 {session?.user?.name || 'Usuário'}
               </p>
-              <p className="truncate text-xs text-slate-500">{session?.user?.email}</p>
+              <p className="truncate text-xs text-slate-500 dark:text-slate-400">{session?.user?.email}</p>
             </div>
             <button
               onClick={async () => {
@@ -182,7 +182,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <header className="flex h-16 items-center justify-between border-b border-slate-200 bg-white px-6 dark:border-slate-800 dark:bg-slate-900">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden"
+            className="rounded-lg p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden"
           >
             <Menu className="h-5 w-5" />
           </button>
@@ -190,7 +190,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="flex items-center gap-2 ml-auto">
             <button
               onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-              className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="rounded-lg p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               title="Alternar Tema"
             >
               {mounted && resolvedTheme === 'dark' ? (
@@ -202,7 +202,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             <Link
               href="/notificacoes"
-              className="relative rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="relative rounded-lg p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
               <Bell className="h-5 w-5" />
             </Link>

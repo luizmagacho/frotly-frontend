@@ -39,7 +39,7 @@ export default function MaintenancePage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Manutenções</h1>
-          <p className="text-sm text-slate-500">Controle de manutenções da frota</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Controle de manutenções da frota</p>
         </div>
         <Link href="/manutencoes/novo" className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700">
           <Plus className="h-4 w-4" /> Nova Manutenção
@@ -69,8 +69,8 @@ export default function MaintenancePage() {
               {maintenances.map((m: any) => (
                 <tr key={m._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
                   <td className="px-4 py-3 text-sm font-medium text-slate-900 dark:text-white">{m.vehicleId?.plate || '-'}</td>
-                  <td className="px-4 py-3 text-sm text-slate-500">{typeLabels[m.type] || m.type}</td>
-                  <td className="px-4 py-3 text-sm text-slate-500 max-w-xs truncate">{m.description}</td>
+                  <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400">{typeLabels[m.type] || m.type}</td>
+                  <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 max-w-xs truncate">{m.description}</td>
                   <td className="px-4 py-3 text-sm font-medium text-slate-900 dark:text-white">{formatCurrency(m.totalCost || 0)}</td>
                   <td className="px-4 py-3"><span className={`rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[m.status] || ''}`}>{statusLabels[m.status] || m.status}</span></td>
                   <td className="px-4 py-3 text-right">

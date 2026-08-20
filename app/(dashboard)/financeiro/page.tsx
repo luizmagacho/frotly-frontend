@@ -24,7 +24,7 @@ function FleetOverview() {
       <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 py-16 dark:border-slate-700">
         <Wallet className="mb-4 h-12 w-12 text-slate-400" />
         <h3 className="text-lg font-medium text-slate-900 dark:text-white">Nenhum veículo encontrado</h3>
-        <p className="mt-1 text-sm text-slate-500">Comece adicionando veículos à sua frota.</p>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Comece adicionando veículos à sua frota.</p>
       </div>
     );
   }
@@ -68,7 +68,7 @@ export default function FinancialPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Financeiro</h1>
-          <p className="text-sm text-slate-500">Selecione um veículo para ver o livro caixa e lançamentos.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Selecione um veículo para ver o livro caixa e lançamentos.</p>
         </div>
       </div>
 

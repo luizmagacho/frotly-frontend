@@ -30,7 +30,7 @@ export default function DriversPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Motoristas</h1>
-          <p className="text-sm text-slate-500">Gerencie os motoristas da frota</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Gerencie os motoristas da frota</p>
         </div>
         <Link href="/motoristas/novo" className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700">
           <Plus className="h-4 w-4" /> Novo Motorista
@@ -66,8 +66,8 @@ export default function DriversPage() {
               {drivers.map((driver: any) => (
                 <tr key={driver._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
                   <td className="px-4 py-3 text-sm font-medium text-slate-900 dark:text-white">{driver.name}</td>
-                  <td className="px-4 py-3 text-sm text-slate-500">{formatCPF(driver.cpf)}</td>
-                  <td className="px-4 py-3 text-sm text-slate-500">{driver.phone}</td>
+                  <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400">{formatCPF(driver.cpf)}</td>
+                  <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400">{driver.phone}</td>
                   <td className="px-4 py-3 text-sm"><span className={`font-medium ${driver.score >= 80 ? 'text-green-600' : driver.score >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>{driver.score}</span></td>
                   <td className="px-4 py-3 text-sm"><span className={`rounded-full px-2 py-0.5 text-xs font-medium ${driver.status === 'ACTIVE' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : driver.status === 'SUSPENDED' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400'}`}>{driver.status === 'ACTIVE' ? 'Ativo' : driver.status === 'SUSPENDED' ? 'Suspenso' : 'Inativo'}</span></td>
                   <td className="px-4 py-3 text-right">

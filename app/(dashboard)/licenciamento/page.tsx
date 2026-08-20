@@ -11,7 +11,7 @@ export default function LicensingPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div><h1 className="text-2xl font-bold text-slate-900 dark:text-white">Licenciamento</h1><p className="text-sm text-slate-500">Controle de licenciamento anual</p></div>
+        <div><h1 className="text-2xl font-bold text-slate-900 dark:text-white">Licenciamento</h1><p className="text-sm text-slate-500 dark:text-slate-400">Controle de licenciamento anual</p></div>
         <Link href="/licenciamento/novo" className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700"><Plus className="h-4 w-4" /> Novo</Link>
       </div>
       {isLoading ? <div className="h-48 animate-pulse rounded-xl bg-slate-200 dark:bg-slate-800" /> :

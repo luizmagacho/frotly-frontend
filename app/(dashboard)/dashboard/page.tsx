@@ -41,7 +41,7 @@ function StatCard({
           <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{title}</p>
           <p className="mt-1 text-3xl font-bold text-slate-900 dark:text-white">{value}</p>
           {subtitle && (
-            <p className="mt-1 flex items-center gap-1 text-sm text-slate-500">
+            <p className="mt-1 flex items-center gap-1 text-sm text-slate-500 dark:text-slate-400">
               {trend === 'up' && <TrendingUp className="h-4 w-4 text-green-500" />}
               {trend === 'down' && <TrendingDown className="h-4 w-4 text-red-500" />}
               {subtitle}
@@ -189,7 +189,7 @@ export default function DashboardPage() {
             <h3 className="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
               <Wallet className="h-5 w-5 text-blue-600" /> Caixa & Finanças de Aluguel
             </h3>
-            <p className="text-sm text-slate-500">Métricas financeiras consolidadas de contratos ativos</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Métricas financeiras consolidadas de contratos ativos</p>
           </div>
           <div className="flex items-center gap-2 rounded-lg bg-blue-50 dark:bg-blue-950/40 px-3 py-1.5 text-xs font-semibold text-blue-700 dark:text-blue-400">
             <Activity className="h-4 w-4" /> Taxa de Adimplência: {adimplenciaRate}%
@@ -233,7 +233,7 @@ export default function DashboardPage() {
             <h3 className="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
               <DollarSign className="h-5 w-5 text-red-500" /> Contas a Receber (Próximas Parcelas)
             </h3>
-            <p className="text-sm text-slate-500">Acompanhamento e quitação rápida de parcelas ativas</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Acompanhamento e quitação rápida de parcelas ativas</p>
           </div>
           <span className="rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-xs font-bold text-slate-700 dark:text-slate-300">
             {pendingPayments.length} pendentes
@@ -241,7 +241,7 @@ export default function DashboardPage() {
         </div>
 
         {pendingPayments.length === 0 ? (
-          <div className="py-8 text-center text-sm text-slate-500">
+          <div className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">
             Nenhuma parcela pendente ou atrasada no momento! 🎉
           </div>
         ) : (
@@ -261,7 +261,7 @@ export default function DashboardPage() {
                   <tr key={idx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
                     <td className="py-3.5 px-4">
                       <div className="font-medium text-slate-900 dark:text-white">{p.driverName}</div>
-                      <div className="text-xs text-slate-500">{p.vehicleModel} • {p.vehiclePlate}</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">{p.vehicleModel} • {p.vehiclePlate}</div>
                     </td>
                     <td className="py-3.5 px-4 text-slate-600 dark:text-slate-400">
                       {formatDate(p.dueDate)}
@@ -401,7 +401,7 @@ export default function DashboardPage() {
             </div>
           ))}
           {!alertData && !kpisLoading && (
-            <p className="text-sm text-slate-500">Nenhum alerta no momento</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Nenhum alerta no momento</p>
           )}
         </div>
       </div>

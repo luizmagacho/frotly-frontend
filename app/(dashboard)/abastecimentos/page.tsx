@@ -200,13 +200,13 @@ export default function RefuelsPage() {
             <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan={7} className="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
                     Carregando dados...
                   </td>
                 </tr>
               ) : refuels.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan={7} className="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
                     Nenhum abastecimento registrado.
                   </td>
                 </tr>
@@ -217,7 +217,7 @@ export default function RefuelsPage() {
                       <div className="font-medium text-slate-900 dark:text-white">
                         {refuel.vehicleId?.licensePlate}
                       </div>
-                      <div className="text-xs text-slate-500">
+                      <div className="text-xs text-slate-500 dark:text-slate-400">
                         {refuel.vehicleId?.brand} {refuel.vehicleId?.model}
                       </div>
                     </td>
@@ -239,7 +239,7 @@ export default function RefuelsPage() {
                     </td>
                     <td className="px-6 py-4 font-medium text-slate-900 dark:text-white">
                       {formatCurrency(refuel.totalCost)}
-                      <div className="text-xs text-slate-500 font-normal">
+                      <div className="text-xs text-slate-500 dark:text-slate-400 font-normal">
                         {formatCurrency(refuel.pricePerUnit)}/L
                       </div>
                     </td>
@@ -269,7 +269,7 @@ export default function RefuelsPage() {
               </h2>
               <button 
                 onClick={() => setShowModal(false)}
-                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-500"
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-500 dark:text-slate-400"
               >
                 <X className="h-5 w-5" />
               </button>

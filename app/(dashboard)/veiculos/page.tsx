@@ -47,7 +47,7 @@ export default function VehiclesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Veículos</h1>
-          <p className="text-sm text-slate-500">Gerencie os veículos da sua frota</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Gerencie os veículos da sua frota</p>
         </div>
         <Link href="/veiculos/novo" className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700">
           <Plus className="h-4 w-4" /> Novo Veículo
@@ -77,7 +77,7 @@ export default function VehiclesPage() {
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 py-16 dark:border-slate-700">
           <Car className="mb-4 h-12 w-12 text-slate-400" />
           <h3 className="text-lg font-medium text-slate-900 dark:text-white">Nenhum veículo encontrado</h3>
-          <p className="mt-1 text-sm text-slate-500">Adicione o primeiro veículo da sua frota</p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Adicione o primeiro veículo da sua frota</p>
           <Link href="/veiculos/novo" className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
             Adicionar Veículo
           </Link>
@@ -114,7 +114,7 @@ export default function VehiclesPage() {
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
                 {vehicle.brand} {vehicle.model}
               </h3>
-              <p className="text-sm text-slate-500">{vehicle.plate} • {vehicle.year}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{vehicle.plate} • {vehicle.year}</p>
               <div className="mt-3 flex items-center justify-between text-xs text-slate-400">
                 <span>{vehicle.color}</span>
                 <span>{(vehicle.mileage ?? vehicle.currentMileage ?? 0).toLocaleString('pt-BR')} km</span>

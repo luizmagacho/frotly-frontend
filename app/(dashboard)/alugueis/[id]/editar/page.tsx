@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
@@ -8,90 +8,98 @@ import { toast } from 'sonner';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
-export default function NewRentalPage() {
+export default function EditRentalPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
+  const resolvedParams = use(params);
+  const rentalId = resolvedParams.id;
+  
   const [form, setForm] = useState({
-    vehicleId: '', driverId: '', startDate: '', expectedEndDate: '',
+    startDate: '', expectedEndDate: '',
     rentalAmount: '', paymentFrequency: 'WEEKLY', securityDeposit: '', notes: ''
   });
 
-  const { data: vehiclesData } = useQuery({
-    queryKey: ['vehicles-available'],
-    queryFn: () => api.get<any>('/vehicles', { status: 'AVAILABLE', limit: 100 }),
-  });
-  
-  const { data: driversData } = useQuery({
-    queryKey: ['drivers-all'],
-    queryFn: () => api.get<any>('/drivers', { limit: 100 }),
+  const { data: rentalData, isLoading } = useQuery({
+    queryKey: ['rental', rentalId],
+    queryFn: () => api.get<any>(`/rentals/${rentalId}`),
   });
 
-  const vehicles = vehiclesData?.data?.data || vehiclesData?.data || [];
-  const drivers = driversData?.data?.data || driversData?.data || [];
+  useEffect(() => {
+    if (rentalData) {
+      const rental = rentalData.data || rentalData;
+      setForm({
+        startDate: rental.startDate ? new Date(rental.startDate).toISOString().split('T')[0] : '',
+        expectedEndDate: rental.expectedEndDate ? new Date(rental.expectedEndDate).toISOString().split('T')[0] : '',
+        rentalAmount: rental.rentalAmount?.toString() || '',
+        paymentFrequency: rental.paymentFrequency || 'WEEKLY',
+        securityDeposit: rental.securityDeposit?.toString() || '',
+        notes: rental.notes || ''
+      });
+    }
+  }, [rentalData]);
 
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: (data: any) => api.post('/rentals', data),
+    mutationFn: (data: any) => api.put(`/rentals/${rentalId}`, data),
     onSuccess: () => { 
+      queryClient.invalidateQueries({ queryKey: ['rental', rentalId] });
       queryClient.invalidateQueries({ queryKey: ['rentals'] });
-      toast.success('Contrato de aluguel criado!'); 
-      router.push('/alugueis'); 
+      toast.success('Contrato de aluguel atualizado!'); 
+      router.push(`/alugueis/${rentalId}`); 
     },
-    onError: (err: any) => toast.error(err.response?.data?.message || err.message || 'Erro ao criar contrato'),
+    onError: (err: any) => toast.error(err.response?.data?.message || err.message || 'Erro ao atualizar contrato'),
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.vehicleId || !form.driverId || !form.startDate || !form.rentalAmount) {
+    if (!form.startDate || !form.rentalAmount) {
       toast.error('Preencha os campos obrigatórios!');
       return;
     }
     
     mutation.mutate({
-      ...form,
       rentalAmount: Number(form.rentalAmount),
       securityDeposit: form.securityDeposit ? Number(form.securityDeposit) : 0,
+      paymentFrequency: form.paymentFrequency,
       startDate: new Date(form.startDate).toISOString(),
       expectedEndDate: form.expectedEndDate ? new Date(form.expectedEndDate).toISOString() : undefined,
+      notes: form.notes || undefined,
     });
   };
 
   const inputClass = "w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-white";
   const labelClass = "mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300";
 
+  if (isLoading) {
+    return <div className="py-20 text-center text-slate-500 dark:text-slate-400">Carregando...</div>;
+  }
+
+  const rental = rentalData?.data || rentalData;
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/alugueis" className="rounded-lg p-2 hover:bg-slate-100 dark:hover:bg-slate-800">
+        <Link href={`/alugueis/${rentalId}`} className="rounded-lg p-2 hover:bg-slate-100 dark:hover:bg-slate-800">
           <ArrowLeft className="h-5 w-5 text-slate-500 dark:text-slate-400" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Novo Aluguel</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Inicie um novo contrato de locação</p>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Editar Aluguel</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Atualize os valores e datas do contrato</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
         <div className="mb-6 border-b border-slate-200 pb-4 dark:border-slate-800">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Dados do Contrato</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Veículo e Motorista não podem ser alterados após o início.</p>
         </div>
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <div>
-            <label className={labelClass}>Veículo (Apenas Disponíveis) *</label>
-            <select className={inputClass} value={form.vehicleId} onChange={(e) => setForm({ ...form, vehicleId: e.target.value })} required>
-              <option value="">Selecione um veículo...</option>
-              {vehicles.map((v: any) => (
-                <option key={v._id} value={v._id}>{v.plate || v.licensePlate} - {v.brand} {v.model}</option>
-              ))}
-            </select>
+            <label className={labelClass}>Veículo</label>
+            <input className={inputClass + " bg-slate-50 dark:bg-slate-800/50"} value={`${rental?.vehicleId?.brand} ${rental?.vehicleId?.model} (${rental?.vehicleId?.licensePlate})`} disabled />
           </div>
           <div>
-            <label className={labelClass}>Motorista *</label>
-            <select className={inputClass} value={form.driverId} onChange={(e) => setForm({ ...form, driverId: e.target.value })} required>
-              <option value="">Selecione um motorista...</option>
-              {drivers.map((d: any) => (
-                <option key={d._id} value={d._id}>{d.name} ({d.cpf})</option>
-              ))}
-            </select>
+            <label className={labelClass}>Motorista</label>
+            <input className={inputClass + " bg-slate-50 dark:bg-slate-800/50"} value={rental?.driverId?.name} disabled />
           </div>
           <div>
             <label className={labelClass}>Data de Início *</label>
@@ -105,6 +113,7 @@ export default function NewRentalPage() {
 
         <div className="mb-6 mt-8 border-b border-slate-200 pb-4 dark:border-slate-800">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Financeiro</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Alterar os valores ou datas vai recalcular as parcelas pendentes (as já pagas não serão afetadas).</p>
         </div>
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <div>
@@ -136,12 +145,12 @@ export default function NewRentalPage() {
         </div>
 
         <div className="mt-8 flex justify-end gap-3">
-          <Link href="/alugueis" className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300">
+          <Link href={`/alugueis/${rentalId}`} className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300">
             Cancelar
           </Link>
           <button type="submit" disabled={mutation.isPending}
             className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">
-            {mutation.isPending ? 'Criando...' : 'Iniciar Contrato'}
+            {mutation.isPending ? 'Salvando...' : 'Salvar Alterações'}
           </button>
         </div>
       </form>

@@ -8,7 +8,7 @@ export default function PlaceholderPage() {
         <Wrench className="h-10 w-10 text-blue-600 dark:text-blue-400" />
       </div>
       <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Em Desenvolvimento</h1>
-      <p className="max-w-md text-slate-500">
+      <p className="max-w-md text-slate-500 dark:text-slate-400">
         Esta tela ainda está sendo construída e estará disponível em breve.
       </p>
       <Link href="/dashboard" className="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">

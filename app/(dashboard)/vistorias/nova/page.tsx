@@ -176,7 +176,7 @@ export default function NovaVistoriaPage() {
                 className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
                 placeholder="Ex: 66a6a5ba90072ecfb051ccec"
               />
-              <p className="text-xs text-gray-500">Cole o ObjectId do contrato de locação correspondente.</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Cole o ObjectId do contrato de locação correspondente.</p>
             </div>
           </div>
         </div>
@@ -264,7 +264,7 @@ export default function NovaVistoriaPage() {
                   <button
                     type="button"
                     onClick={() => removeDamage(index)}
-                    className="p-2 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                    className="p-2 text-gray-500 dark:text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                   >
                     <Trash2 className="h-5 w-5" />
                   </button>

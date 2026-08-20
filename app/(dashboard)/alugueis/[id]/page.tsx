@@ -137,7 +137,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
       <div className="flex flex-col items-center justify-center py-20">
         <AlertTriangle className="mb-4 h-12 w-12 text-red-500" />
         <h2 className="text-xl font-bold text-slate-900 dark:text-white">Aluguel não encontrado ou Erro</h2>
-        <p className="mt-2 text-slate-500">O contrato que você está procurando não existe ou ocorreu um erro.</p>
+        <p className="mt-2 text-slate-500 dark:text-slate-400">O contrato que você está procurando não existe ou ocorreu um erro.</p>
         <pre className="mt-4 p-4 bg-slate-100 rounded text-xs text-left max-w-full overflow-auto">
           {JSON.stringify({ 
             rentalId,
@@ -184,25 +184,33 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
 
         <div className="flex items-center gap-3">
           {rental.status === 'ACTIVE' && (
-            <button
-              onClick={() => {
-                toast('Encerrar contrato', {
-                  description: 'Tem certeza? O veículo ficará disponível novamente.',
-                  action: {
-                    label: 'Sim, encerrar',
-                    onClick: () => terminateMutation.mutate(),
-                  },
-                  cancel: {
-                    label: 'Cancelar',
-                    onClick: () => {},
-                  },
-                });
-              }}
-              className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
-              disabled={terminateMutation.isPending}
-            >
-              {terminateMutation.isPending ? 'Encerrando...' : 'Encerrar Contrato'}
-            </button>
+            <>
+              <Link
+                href={`/alugueis/${rentalId}/editar`}
+                className="rounded-lg bg-white px-4 py-2 text-sm font-medium text-slate-700 border border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+              >
+                Editar
+              </Link>
+              <button
+                onClick={() => {
+                  toast('Encerrar contrato', {
+                    description: 'Tem certeza? O veículo ficará disponível novamente.',
+                    action: {
+                      label: 'Sim, encerrar',
+                      onClick: () => terminateMutation.mutate(),
+                    },
+                    cancel: {
+                      label: 'Cancelar',
+                      onClick: () => {},
+                    },
+                  });
+                }}
+                className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+                disabled={terminateMutation.isPending}
+              >
+                {terminateMutation.isPending ? 'Encerrando...' : 'Encerrar Contrato'}
+              </button>
+            </>
           )}
 
           <button
@@ -347,6 +355,10 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
                 <p className="text-xs text-slate-500 dark:text-slate-400">Periodicidade</p>
                 <p className="mt-1 font-semibold text-slate-900 dark:text-white">{frequencyLabel[rental.paymentFrequency] || rental.paymentFrequency}</p>
               </div>
+              <div className="col-span-2 rounded-lg bg-slate-50 p-4 dark:bg-slate-800/50">
+                <p className="text-xs text-slate-500 dark:text-slate-400">Valor da Caução</p>
+                <p className="mt-1 font-semibold text-slate-900 dark:text-white">{formatCurrency(rental.securityDeposit || 0)}</p>
+              </div>
             </div>
           </div>
 
@@ -399,7 +411,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-slate-500">Nenhuma parcela gerada.</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Nenhuma parcela gerada.</p>
             )}
           </div>
         </div>

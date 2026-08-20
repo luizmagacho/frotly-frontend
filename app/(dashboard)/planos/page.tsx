@@ -7,7 +7,7 @@ export default function PlanosPage() {
         <CreditCard className="h-10 w-10 text-blue-600 dark:text-blue-400" />
       </div>
       <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Planos de Assinatura</h1>
-      <p className="max-w-md text-slate-500">
+      <p className="max-w-md text-slate-500 dark:text-slate-400">
         Este módulo está em desenvolvimento. Em breve você poderá gerenciar os planos de assinatura do Frotly por aqui.
       </p>
     </div>

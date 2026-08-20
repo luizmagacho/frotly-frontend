@@ -27,18 +27,18 @@ export default function VehicleDetailPage() {
   const vehicle = data?.data || data;
 
   if (isLoading) return <div className="flex items-center justify-center py-20"><div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" /></div>;
-  if (!vehicle) return <div className="py-20 text-center text-slate-500">Veículo não encontrado</div>;
+  if (!vehicle) return <div className="py-20 text-center text-slate-500 dark:text-slate-400">Veículo não encontrado</div>;
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button onClick={() => router.back()} className="rounded-lg p-2 hover:bg-slate-100 dark:hover:bg-slate-800">
-            <ArrowLeft className="h-5 w-5 text-slate-500" />
+            <ArrowLeft className="h-5 w-5 text-slate-500 dark:text-slate-400" />
           </button>
           <div>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{vehicle.brand} {vehicle.model}</h1>
-            <p className="text-sm text-slate-500">{vehicle.plate} • {vehicle.year}/{vehicle.modelYear}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{vehicle.plate} • {vehicle.year}/{vehicle.modelYear}</p>
           </div>
         </div>
         <Link href={`/veiculos/${id}/editar`} className="flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300">
@@ -71,7 +71,7 @@ export default function VehicleDetailPage() {
               ['Status', statusLabels[vehicle.status] || vehicle.status],
             ].map(([label, value]) => (
               <div key={label as string} className="flex justify-between">
-                <dt className="text-sm text-slate-500">{label}</dt>
+                <dt className="text-sm text-slate-500 dark:text-slate-400">{label}</dt>
                 <dd className="text-sm font-medium text-slate-900 dark:text-white">{value}</dd>
               </div>
             ))}

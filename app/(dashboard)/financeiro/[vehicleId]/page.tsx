@@ -158,7 +158,7 @@ function VehicleLedger({ vehicleId }: { vehicleId: string }) {
         </button>
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Livro Caixa</h1>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             {vehicle ? `${vehicle.brand} ${vehicle.model} • ${vehicle.plate}` : 'Carregando veículo...'}
           </p>
         </div>
@@ -166,15 +166,15 @@ function VehicleLedger({ vehicleId }: { vehicleId: string }) {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex items-center gap-2 text-sm text-slate-500"><TrendingUp className="h-4 w-4 text-green-600" /> Entradas</div>
+          <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400"><TrendingUp className="h-4 w-4 text-green-600" /> Entradas</div>
           <p className="mt-2 text-xl font-bold text-green-600">{formatCurrency(ledger?.totalIncome || 0)}</p>
         </div>
         <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex items-center gap-2 text-sm text-slate-500"><TrendingDown className="h-4 w-4 text-red-600" /> Saídas</div>
+          <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400"><TrendingDown className="h-4 w-4 text-red-600" /> Saídas</div>
           <p className="mt-2 text-xl font-bold text-red-600">{formatCurrency(ledger?.totalExpense || 0)}</p>
         </div>
         <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex items-center gap-2 text-sm text-slate-500"><Wallet className="h-4 w-4 text-blue-600" /> Saldo</div>
+          <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400"><Wallet className="h-4 w-4 text-blue-600" /> Saldo</div>
           <p className={`mt-2 text-xl font-bold ${(ledger?.balance || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>{formatCurrency(ledger?.balance || 0)}</p>
         </div>
       </div>
@@ -189,7 +189,7 @@ function VehicleLedger({ vehicleId }: { vehicleId: string }) {
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 py-16 dark:border-slate-700">
           <Wallet className="mb-4 h-12 w-12 text-slate-400" />
           <h3 className="text-lg font-medium text-slate-900 dark:text-white">Nenhum lançamento ainda</h3>
-          <p className="mt-1 text-sm text-slate-500">Registre os pagamentos e recebimentos desse veículo</p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Registre os pagamentos e recebimentos desse veículo</p>
         </div>
       ) : (
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">

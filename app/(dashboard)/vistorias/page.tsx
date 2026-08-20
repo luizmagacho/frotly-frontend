@@ -133,7 +133,7 @@ export default function VistoriasPage() {
                     <td className="px-6 py-4">
                       <div className="flex flex-col space-y-1">
                         <span className="text-white font-medium">{vistoria.inspectorName || '-'}</span>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
                           {vistoria.damages?.length > 0 ? `${vistoria.damages.length} avarias` : 'Sem avarias'}
                         </span>
                       </div>

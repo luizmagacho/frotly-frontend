@@ -193,7 +193,7 @@ export default function IpvaPage() {
             <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan={5} className="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
                     <div className="flex items-center justify-center gap-2">
                       <div className="h-4 w-4 animate-spin rounded-full border-2 border-indigo-600 border-t-transparent"></div>
                       Carregando...
@@ -202,7 +202,7 @@ export default function IpvaPage() {
                 </tr>
               ) : vehicleList.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan={5} className="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
                     Nenhum veículo encontrado.
                   </td>
                 </tr>
@@ -216,7 +216,7 @@ export default function IpvaPage() {
                         </div>
                         <div>
                           <p className="font-medium text-slate-900 dark:text-white">{v.name}</p>
-                          <p className="text-xs text-slate-500">{v.licensePlate}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">{v.licensePlate}</p>
                         </div>
                       </div>
                     </td>
@@ -224,7 +224,7 @@ export default function IpvaPage() {
                       {v.latestIpva ? (
                         <div className="flex flex-col gap-1">
                           {getStatusBadge(v.latestIpva.status)}
-                          <span className="text-xs text-slate-500">Ano: {v.latestIpva.year}</span>
+                          <span className="text-xs text-slate-500 dark:text-slate-400">Ano: {v.latestIpva.year}</span>
                         </div>
                       ) : (
                         <span className="text-slate-400 italic">Não registrado</span>
@@ -257,7 +257,7 @@ export default function IpvaPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
           <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-900">
             <h2 className="text-xl font-bold text-slate-900 dark:text-white">Registrar IPVA</h2>
-            <p className="mb-6 text-sm text-slate-500">Adicione os detalhes do imposto para o veículo.</p>
+            <p className="mb-6 text-sm text-slate-500 dark:text-slate-400">Adicione os detalhes do imposto para o veículo.</p>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>

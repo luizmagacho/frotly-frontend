@@ -30,7 +30,7 @@ export default function InsurancePage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Seguros</h1>
-          <p className="text-sm text-slate-500">Gestão de apólices e coberturas da frota</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Gestão de apólices e coberturas da frota</p>
         </div>
         <button
           onClick={() => setShowModal(true)}
@@ -62,7 +62,7 @@ export default function InsurancePage() {
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 py-16 dark:border-slate-800">
           <Shield className="mb-4 h-12 w-12 text-slate-400" />
           <h3 className="text-lg font-medium text-slate-900 dark:text-white">Nenhum seguro encontrado</h3>
-          <p className="mt-1 text-sm text-slate-500">Comece adicionando uma nova apólice para sua frota.</p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Comece adicionando uma nova apólice para sua frota.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -78,7 +78,7 @@ export default function InsurancePage() {
                     <h3 className="font-semibold text-slate-900 dark:text-white">
                       {insurance.vehicleId?.brand} {insurance.vehicleId?.model}
                     </h3>
-                    <p className="text-sm font-medium text-slate-500">{insurance.vehicleId?.licensePlate}</p>
+                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{insurance.vehicleId?.licensePlate}</p>
                   </div>
                   {isExpired ? (
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400">
@@ -100,31 +100,31 @@ export default function InsurancePage() {
 
                 <div className="mb-4 flex-1 space-y-3">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-500">Seguradora</span>
+                    <span className="text-slate-500 dark:text-slate-400">Seguradora</span>
                     <span className="font-medium text-slate-900 dark:text-white">{insurance.provider || '-'}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-500">Apólice</span>
+                    <span className="text-slate-500 dark:text-slate-400">Apólice</span>
                     <span className="font-medium text-slate-900 dark:text-white">{insurance.policyNumber || '-'}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-500">Cobertura</span>
+                    <span className="text-slate-500 dark:text-slate-400">Cobertura</span>
                     <span className="font-medium text-slate-900 dark:text-white">{insurance.coverageType || '-'}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-500">Prêmio</span>
+                    <span className="text-slate-500 dark:text-slate-400">Prêmio</span>
                     <span className="font-medium text-slate-900 dark:text-white">{formatCurrency(insurance.cost)}</span>
                   </div>
                   {insurance.installments > 1 && (
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-slate-500">Parcelamento</span>
+                      <span className="text-slate-500 dark:text-slate-400">Parcelamento</span>
                       <span className="font-medium text-slate-900 dark:text-white">{insurance.installments}x</span>
                     </div>
                   )}
                 </div>
 
                 <div className="mt-auto border-t border-slate-100 pt-4 dark:border-slate-800">
-                  <div className="flex items-center justify-between text-xs text-slate-500">
+                  <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                     <div className="flex items-center gap-1.5">
                       <Calendar className="h-4 w-4" />
                       Vence em {formatDate(insurance.endDate)}
@@ -218,7 +218,7 @@ function NewInsuranceModal({ onClose }: { onClose: () => void }) {
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h3 className="text-xl font-bold text-slate-900 dark:text-white">Registrar Novo Seguro</h3>
-            <p className="text-sm text-slate-500">Preencha os dados da apólice (apenas Veículo, Vigência e Valor são obrigatórios)</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Preencha os dados da apólice (apenas Veículo, Vigência e Valor são obrigatórios)</p>
           </div>
           <button onClick={onClose} className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800">
             <X className="h-5 w-5" />
@@ -306,7 +306,7 @@ function NewInsuranceModal({ onClose }: { onClose: () => void }) {
                   </select>
                 </div>
               </div>
-              <p className="mt-3 text-xs text-slate-500">
+              <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
                 O valor será automaticamente adicionado ao Livro Caixa do veículo como {installments === '1' ? 'uma despesa única' : `despesas mensais em ${installments}x`} a partir da data de início, servindo como lembretes de pagamento.
               </p>
             </div>

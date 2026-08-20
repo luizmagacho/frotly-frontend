@@ -62,7 +62,7 @@ export default function DriverDetailsPage({ params }: { params: Promise<{ id: st
       <div className="flex flex-col items-center justify-center py-20">
         <AlertTriangle className="mb-4 h-12 w-12 text-red-500" />
         <h2 className="text-xl font-bold text-slate-900 dark:text-white">Motorista não encontrado</h2>
-        <p className="mt-2 text-slate-500">O motorista que você está procurando não existe ou foi removido.</p>
+        <p className="mt-2 text-slate-500 dark:text-slate-400">O motorista que você está procurando não existe ou foi removido.</p>
         <button onClick={() => router.back()} className="mt-6 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
           Voltar
         </button>

@@ -36,7 +36,7 @@ export default function RentalsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Aluguéis</h1>
-          <p className="text-sm text-slate-500">Gerencie os contratos de aluguel</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Gerencie os contratos de aluguel</p>
         </div>
         <Link href="/alugueis/novo" className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700">
           <Plus className="h-4 w-4" /> Novo Aluguel
@@ -71,13 +71,13 @@ export default function RentalsPage() {
                   <p className="font-medium text-slate-900 dark:text-white">
                     {rental.vehicleId?.plate || 'Veículo'} - {rental.vehicleId?.brand} {rental.vehicleId?.model}
                   </p>
-                  <p className="text-sm text-slate-500">{rental.driverId?.name || 'Motorista'}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{rental.driverId?.name || 'Motorista'}</p>
                 </div>
               </div>
               <div className="flex items-center gap-6">
                 <div className="text-right">
                   <p className="text-sm font-semibold text-slate-900 dark:text-white">{formatCurrency(rental.rentalAmount)}/mês</p>
-                  <p className="text-xs text-slate-500">Início: {formatDate(rental.startDate)}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Início: {formatDate(rental.startDate)}</p>
                 </div>
                 <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[rental.status] || ''}`}>
                   {statusLabel[rental.status] || rental.status}

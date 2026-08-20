@@ -81,7 +81,7 @@ export default function Home() {
             </a>
           </div>
 
-          <p className="text-sm text-slate-500 mt-6">Sem cartão de crédito · Cancele quando quiser</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-6">Sem cartão de crédito · Cancele quando quiser</p>
 
           {/* Dashboard preview */}
           <div className="mt-16 relative">
@@ -115,7 +115,7 @@ export default function Home() {
               </div>
               {/* Fake table */}
               <div className="rounded-xl border border-white/5 bg-white/2 overflow-hidden">
-                <div className="grid grid-cols-4 text-xs text-slate-500 px-4 py-3 border-b border-white/5 bg-white/3">
+                <div className="grid grid-cols-4 text-xs text-slate-500 dark:text-slate-400 px-4 py-3 border-b border-white/5 bg-white/3">
                   <span>Veículo</span><span>Motorista</span><span>Status</span><span>Retorno</span>
                 </div>
                 {[
@@ -139,7 +139,7 @@ export default function Home() {
       {/* ── LOGOS / TRUST ── */}
       <section className="py-16 border-y border-white/5 bg-white/[0.02]">
         <div className="max-w-5xl mx-auto px-6">
-          <p className="text-center text-sm text-slate-500 mb-8 uppercase tracking-widest">Construído com segurança e confiabilidade</p>
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mb-8 uppercase tracking-widest">Construído com segurança e confiabilidade</p>
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16">
             {[
               { icon: '🔒', label: 'Adequado à LGPD' },
@@ -298,7 +298,7 @@ export default function Home() {
               <div key={stat.label} className="p-8 rounded-2xl border border-white/8 bg-white/3">
                 <div className="text-4xl font-extrabold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-2">{stat.value}</div>
                 <div className="font-semibold mb-1">{stat.label}</div>
-                <div className="text-slate-500 text-sm">{stat.sub}</div>
+                <div className="text-slate-500 dark:text-slate-400 text-sm">{stat.sub}</div>
               </div>
             ))}
           </div>
@@ -434,7 +434,7 @@ export default function Home() {
                   </div>
                   <div>
                     <div className="font-semibold text-sm">{t.name}</div>
-                    <div className="text-slate-500 text-xs">{t.role} · {t.city}</div>
+                    <div className="text-slate-500 dark:text-slate-400 text-xs">{t.role} · {t.city}</div>
                   </div>
                 </div>
               </div>
@@ -519,7 +519,7 @@ export default function Home() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </Link>
-          <p className="text-slate-500 text-sm mt-5">14 dias grátis · Sem cartão de crédito · Cancele quando quiser</p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-5">14 dias grátis · Sem cartão de crédito · Cancele quando quiser</p>
         </div>
       </section>
 
@@ -534,7 +534,7 @@ export default function Home() {
               <span className="font-bold text-lg">Frotly</span>
               <span className="text-slate-600 text-sm ml-2">© 2026 · Todos os direitos reservados</span>
             </div>
-            <div className="flex items-center gap-6 text-sm text-slate-500">
+            <div className="flex items-center gap-6 text-sm text-slate-500 dark:text-slate-400">
               <a href="#" className="hover:text-white transition-colors">Privacidade</a>
               <a href="#" className="hover:text-white transition-colors">Termos</a>
               <a href="#" className="hover:text-white transition-colors">Contato</a>
