@@ -214,7 +214,12 @@ export default function EditDriverPage() {
           </div>
           <div>
             <label className={labelClass}>Categoria *</label>
-            <input className={inputClass} value={form.cnhCategory} onChange={(e) => setForm({ ...form, cnhCategory: e.target.value.toUpperCase() })} placeholder="Ex: B, AB" required />
+            <select className={inputClass} value={form.cnhCategory} onChange={(e) => setForm({ ...form, cnhCategory: e.target.value })} required>
+              <option value="">Selecione...</option>
+              {['A','B','C','D','E','AB','AC','AD','AE','BD','BE','CD','CE','DE','ABD','ABE','ACD','ACE','ADE','BCD','BCE','ABCD','ABCE','ABDE','ABCDE'].map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
           </div>
           <div>
             <label className={labelClass}>Validade *</label>
