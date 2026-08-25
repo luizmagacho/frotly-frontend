@@ -130,9 +130,16 @@ export default function DashboardPage() {
   totalContracted = totalCollected + totalReceivable;
   const adimplenciaRate = totalCount > 0 ? Math.round((paidCount / totalCount) * 100) : 100;
 
+  const STATUS_MAP: Record<string, string> = {
+    'AVAILABLE': 'Disponível',
+    'RENTED': 'Alugado',
+    'MAINTENANCE': 'Manutenção',
+    'INACTIVE': 'Inativo'
+  };
+
   const vehicleStatusData = kpiData?.vehicles?.byStatus
     ? Object.entries(kpiData.vehicles.byStatus).map(([name, value]) => ({
-        name: name.replace('_', ' '),
+        name: STATUS_MAP[name] || name.replace('_', ' '),
         value: value as number,
       }))
     : [];
