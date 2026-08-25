@@ -6,7 +6,8 @@ export default auth((req) => {
 
   const isAuthPage = pathname.startsWith('/login') ||
     pathname.startsWith('/registro') ||
-    pathname.startsWith('/esqueci-senha');
+    pathname.startsWith('/esqueci-senha') ||
+    pathname.startsWith('/recuperar-senha');
   const isPublicPage =
     pathname === '/' ||
     pathname.startsWith('/api/auth') ||
