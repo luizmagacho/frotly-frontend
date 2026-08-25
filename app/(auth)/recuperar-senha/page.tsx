@@ -18,21 +18,21 @@ function ResetPasswordForm() {
 
   if (!token) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-sm text-center">
-        <h1 className="mb-4 text-2xl font-bold text-white">Link Inválido</h1>
-        <p className="mb-6 text-sm text-slate-400">O link de recuperação está ausente ou é inválido.</p>
-        <Link href="/esqueci-senha" className="text-blue-400 hover:text-blue-300">Solicitar novo link</Link>
+      <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 p-8 shadow-2xl backdrop-blur-sm text-center">
+        <h1 className="mb-4 text-2xl font-bold text-slate-900 dark:text-white">Link Inválido</h1>
+        <p className="mb-6 text-sm text-slate-500 dark:text-slate-400">O link de recuperação está ausente ou é inválido.</p>
+        <Link href="/esqueci-senha" className="text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">Solicitar novo link</Link>
       </div>
     );
   }
 
   if (success) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-sm text-center">
-        <div className="mb-4 rounded-lg bg-green-500/10 p-4 text-sm text-green-400">
+      <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 p-8 shadow-2xl backdrop-blur-sm text-center">
+        <div className="mb-4 rounded-lg bg-green-500/10 p-4 text-sm text-green-600 dark:text-green-400">
           Senha redefinida com sucesso!
         </div>
-        <Link href="/login" className="text-blue-400 hover:text-blue-300">Ir para o Login</Link>
+        <Link href="/login" className="text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">Ir para o Login</Link>
       </div>
     );
   }
@@ -62,23 +62,23 @@ function ResetPasswordForm() {
   };
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-sm">
+    <div className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 p-8 shadow-2xl backdrop-blur-sm">
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-white">Nova Senha</h1>
-        <p className="mt-2 text-sm text-slate-400">Crie uma nova senha para sua conta</p>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Nova Senha</h1>
+        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Crie uma nova senha para sua conta</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-slate-300">Nova Senha</label>
+          <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">Nova Senha</label>
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-lg border border-slate-300 dark:border-white/10 bg-white dark:bg-white/5 px-4 py-2.5 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             required minLength={6} />
         </div>
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-slate-300">Confirmar Nova Senha</label>
+          <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">Confirmar Nova Senha</label>
           <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-lg border border-slate-300 dark:border-white/10 bg-white dark:bg-white/5 px-4 py-2.5 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             required minLength={6} />
         </div>
         <button type="submit" disabled={loading}
@@ -92,7 +92,7 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={<div className="text-white text-center">Carregando...</div>}>
+    <Suspense fallback={<div className="text-slate-900 dark:text-white text-center">Carregando...</div>}>
       <ResetPasswordForm />
     </Suspense>
   );
