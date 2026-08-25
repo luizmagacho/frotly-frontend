@@ -48,7 +48,7 @@ export default function PlanosPage() {
     try {
       setLoadingPlan(planId);
       const interval = isAnnual ? 'annual' : 'monthly';
-      const response = await api.post('/billing/checkout', { plan: planId, interval });
+      const response = await api.post('/billing/checkout', { plan: planId, interval }) as any;
       
       if (response.data && response.data.url) {
         window.location.href = response.data.url; 
@@ -64,7 +64,7 @@ export default function PlanosPage() {
   const handlePortal = async () => {
     try {
       setLoadingPlan('PORTAL');
-      const response = await api.get('/billing/portal');
+      const response = await api.get('/billing/portal') as any;
       if (response.data && response.data.url) {
         window.location.href = response.data.url;
       }
