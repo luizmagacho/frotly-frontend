@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           id="crisp-chat"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
-            __html: `window.$crisp=[];window.CRISP_WEBSITE_ID="INSERIR_ID_AQUI";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();`
+            __html: `window.$crisp=[];window.CRISP_WEBSITE_ID="43cffa01-a84d-4fa8-a3ea-c06380b621a0";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();`
           }}
         />
       </head>
