@@ -54,9 +54,9 @@ export default function Home() {
           </div>
 
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight mb-6">
-            Gerencie sua locadora
+            O Sistema Completo para
             <span className="block bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-              como uma grande empresa.
+              Sua Locadora de Veículos.
             </span>
           </h1>
 
@@ -164,8 +164,8 @@ export default function Home() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-sm font-medium mb-4">
               Funcionalidades
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Tudo que sua locadora precisa</h2>
-            <p className="text-slate-400 text-lg max-w-2xl mx-auto">Do contrato ao financeiro, da vistoria ao Detran. Uma plataforma completa para escalar sem complicação.</p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Gestão de Frotas e Controle de Aluguéis</h2>
+            <p className="text-slate-400 text-lg max-w-2xl mx-auto">Do contrato ao financeiro, da vistoria ao Detran. Um sistema para locadora de veículos completo para escalar sem complicação.</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
@@ -244,8 +244,8 @@ export default function Home() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-sm font-medium mb-4">
               Como funciona
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Simples como deve ser</h2>
-            <p className="text-slate-400 text-lg max-w-xl mx-auto">Em menos de 30 minutos sua locadora estará operando no Frotly.</p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Software para Locadora de Veículos Simples de Usar</h2>
+            <p className="text-slate-400 text-lg max-w-xl mx-auto">Em menos de 30 minutos sua locadora de veículos estará operando no Frotly.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {[

@@ -3,13 +3,13 @@ import { Providers } from '@/lib/providers';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Frotly — Gerencie sua locadora como uma grande empresa',
-  description: 'Contratos, frota, motoristas, multas, manutenção e financeiro em um único lugar. O sistema de gestão de frotas para locadoras modernas.',
-  keywords: ['gestão de frotas', 'locadora de veículos', 'sistema de locação', 'software frota', 'controle de veículos'],
+  title: 'Frotly | Sistema para Locadora de Veículos e Gestão de Frotas',
+  description: 'O sistema mais simples e completo para locadoras de veículos. Tenha o controle de aluguel de carros, contratos, multas, CNHs e manutenção em um só lugar.',
+  keywords: ['sistema para locadora de veículos', 'controle de aluguel de carros', 'software para locadora de carros', 'gestão de frotas', 'sistema de locação de veículos', 'Frotly'],
   authors: [{ name: 'Frotly' }],
   openGraph: {
-    title: 'Frotly — Gestão de Frotas para Locadoras',
-    description: 'Contratos, frota, multas e financeiro em um só lugar. Comece grátis hoje.',
+    title: 'Frotly | Sistema para Locadoras e Gestão de Frotas',
+    description: 'O sistema mais simples e completo para controle de aluguel de carros, frotas, multas e financeiro em um só lugar.',
     url: 'https://frotly.com.br',
     siteName: 'Frotly',
     locale: 'pt_BR',
