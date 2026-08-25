@@ -58,10 +58,12 @@ export default function LoginPage() {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-xl dark:border-slate-800 dark:bg-slate-900">
       <div className="mb-8 text-center flex flex-col items-center">
-        <img src="/images/logo.jpeg" alt="Roger Centro Automotivo" className="h-20 w-auto rounded-lg object-contain mb-4" />
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Gestor de Frota</h1>
+        <div className="w-16 h-16 rounded-xl overflow-hidden shadow-lg shadow-blue-500/20 mb-4">
+          <img src="/logo.jpg?v=2" alt="Frotly Logo" className="w-full h-full object-cover" />
+        </div>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Frotly</h1>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          Controle e precisão para sua oficina
+          Sistema para locadora de veículos
         </p>
       </div>
 
