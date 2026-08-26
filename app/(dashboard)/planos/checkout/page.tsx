@@ -9,11 +9,10 @@ import { ArrowLeft, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
 // Usar chave pública (NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
-// apiVersion fixado em 2026-03-25.dahlia: a conta ainda está numa versão de API
-// anterior a essa, que não suporta ui_mode: 'embedded_page' (ver billing.service.ts).
+// Stripe.js já carrega fixado na versão "dahlia" por padrão; passar apiVersion
+// manualmente aqui derruba o Stripe() com VersionError em tempo de execução.
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_51HQFk3AV2SviZXwdSYf6kAsxtY1msfV90CSO3HHvR9lh1bDvSEiQOxUuhFoVf78ncwe8LW7O127JgNvRpHWooGyh00a6isnU8L',
-  { apiVersion: '2026-03-25.dahlia' }
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_51HQFk3AV2SviZXwdSYf6kAsxtY1msfV90CSO3HHvR9lh1bDvSEiQOxUuhFoVf78ncwe8LW7O127JgNvRpHWooGyh00a6isnU8L'
 );
 
 export default function CheckoutPage() {
