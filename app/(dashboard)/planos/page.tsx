@@ -40,7 +40,7 @@ export default function PlanosPage() {
       id: 'ENTERPRISE',
       name: 'Enterprise',
       desc: 'Para grandes frotas e redes',
-      monthlyPrice: 999,
+      monthlyPrice: 649,
       icon: <Building2 className="w-6 h-6 text-emerald-500" />,
       features: ['Veículos ilimitados', 'Tudo do Pro', 'Multi-unidades / Multi-tenant', 'Customizações', 'SLA garantido', 'Gerente de conta dedicado', 'Integração com ERP'],
       highlight: false,
