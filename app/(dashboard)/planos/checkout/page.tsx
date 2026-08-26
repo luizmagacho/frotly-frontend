@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { loadStripe } from '@stripe/stripe-js';
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js';
 import { api } from '@/lib/api-client';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
 // Usar chave pública (NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
@@ -25,6 +25,7 @@ export default function CheckoutPage() {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isUpgrade, setIsUpgrade] = useState(false);
+  const [upgraded, setUpgraded] = useState(false);
 
   useEffect(() => {
     api
@@ -49,9 +50,12 @@ export default function CheckoutPage() {
           interval,
         });
 
-        // Agora o backend retorna clientSecret em vez de url
-        if (response?.clientSecret || response?.data?.clientSecret) {
-          setClientSecret(response.clientSecret || response.data.clientSecret);
+        const body = response?.data || response;
+        if (body?.upgraded) {
+          // Quem já tinha assinatura ativa teve o plano trocado direto na Stripe — sem checkout novo.
+          setUpgraded(true);
+        } else if (body?.clientSecret) {
+          setClientSecret(body.clientSecret);
         } else {
           setError('Erro ao carregar sessão de pagamento segura.');
         }
@@ -90,7 +94,23 @@ export default function CheckoutPage() {
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900 min-h-[500px]">
-        {error ? (
+        {upgraded ? (
+          <div className="flex h-64 flex-col items-center justify-center space-y-3 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
+              <CheckCircle2 className="h-9 w-9 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <h3 className="text-lg font-medium text-slate-900 dark:text-white">Upgrade concluído!</h3>
+            <p className="max-w-sm text-sm text-slate-500 dark:text-slate-400">
+              Seu plano já foi atualizado para {planLabel} e a diferença foi cobrada no cartão cadastrado.
+            </p>
+            <button
+              onClick={() => router.push('/planos')}
+              className="mt-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            >
+              Voltar aos Planos
+            </button>
+          </div>
+        ) : error ? (
           <div className="flex h-64 flex-col items-center justify-center text-center">
             <div className="text-red-500 mb-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
