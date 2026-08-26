@@ -16,6 +16,7 @@ export default function CheckoutReturnPage() {
   const router = useRouter();
 
   const [status, setStatus] = useState<'loading' | 'success' | 'open'>('loading');
+  const [finalSubscriptionStatus, setFinalSubscriptionStatus] = useState<string | null>(null);
 
   useEffect(() => {
     if (!sessionId) {
@@ -33,7 +34,10 @@ export default function CheckoutReturnPage() {
           const response = await api.get<any>('/billing/trial/status');
           const subscriptionStatus = response?.subscriptionStatus || response?.data?.subscriptionStatus;
           if (ACTIVE_STATUSES.includes(subscriptionStatus)) {
-            if (!cancelled) setStatus('success');
+            if (!cancelled) {
+              setFinalSubscriptionStatus(subscriptionStatus);
+              setStatus('success');
+            }
             return;
           }
         } catch (err) {
@@ -67,9 +71,13 @@ export default function CheckoutReturnPage() {
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/30">
               <CheckCircle2 className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Assinatura Ativada!</h2>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+              {finalSubscriptionStatus === 'trialing' ? 'Assinatura Ativada!' : 'Plano Atualizado!'}
+            </h2>
             <p className="text-slate-500 dark:text-slate-400">
-              Seu período de teste de 7 dias grátis foi iniciado com sucesso. Você já tem acesso a todos os recursos.
+              {finalSubscriptionStatus === 'trialing'
+                ? 'Seu período de teste de 7 dias grátis foi iniciado com sucesso. Você já tem acesso a todos os recursos.'
+                : 'Seu novo plano já está ativo e a cobrança foi atualizada. Você já tem acesso a todos os recursos.'}
             </p>
             <div className="pt-6">
               <Link
