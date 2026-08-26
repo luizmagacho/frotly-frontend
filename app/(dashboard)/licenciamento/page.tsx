@@ -7,7 +7,7 @@ import { formatCurrency } from '@/lib/shared-utils';
 
 export default function LicensingPage() {
   const { data, isLoading } = useQuery({ queryKey: ['licensing'], queryFn: () => api.get<any>('/licensing', { limit: 50 }) });
-  const items = data?.data?.data || data?.data || [];
+  const items = data?.data || data || [];
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
