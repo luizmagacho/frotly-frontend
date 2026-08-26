@@ -2,10 +2,13 @@
 
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api-client';
 import { CheckCircle2, Shield, Zap, Building2, Loader2, CreditCard } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function PlanosPage() {
+  const router = useRouter();
   const { data: session } = useSession();
   const [isAnnual, setIsAnnual] = useState(false);
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
@@ -44,19 +47,13 @@ export default function PlanosPage() {
     },
   ];
 
-  const handleSubscribe = async (planId: string) => {
+  const handleSubscribe = async (plan: string) => {
     try {
-      setLoadingPlan(planId);
-      const interval = isAnnual ? 'annual' : 'monthly';
-      const response = await api.post('/billing/checkout', { plan: planId, interval }) as any;
-      
-      if (response.data && response.data.url) {
-        window.location.href = response.data.url; 
-      }
-    } catch (error) {
-      console.error('Erro ao iniciar checkout:', error);
-      alert('Erro ao processar assinatura. Tente novamente.');
-    } finally {
+      setLoadingPlan(plan);
+      // Redireciona para a página interna de checkout
+      router.push(`/planos/checkout?plan=${plan}&interval=${isAnnual ? 'annual' : 'monthly'}`);
+    } catch (err: any) {
+      toast.error(err.message || 'Erro ao processar a assinatura.');
       setLoadingPlan(null);
     }
   };

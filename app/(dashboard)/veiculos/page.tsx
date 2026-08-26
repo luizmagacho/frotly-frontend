@@ -40,7 +40,11 @@ export default function VehiclesPage() {
     onError: (err: Error) => toast.error(err.message),
   });
 
-  const vehicles = data?.data?.data || data?.data || [];
+  let vehicles = [];
+  if (Array.isArray(data)) vehicles = data;
+  else if (Array.isArray(data?.data)) vehicles = data.data;
+  else if (Array.isArray(data?.data?.data)) vehicles = data.data.data;
+  else if (Array.isArray(data?.items)) vehicles = data.items;
 
   return (
     <div className="space-y-6">
