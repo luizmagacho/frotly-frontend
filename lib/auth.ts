@@ -55,12 +55,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.role = (user as any).role;
         token.tenantId = (user as any).tenantId;
         token.accessToken = (user as any).accessToken;
         token.refreshToken = (user as any).refreshToken;
+      }
+      // Permite atualizar o nome de exibição sem precisar deslogar — usado após
+      // editar o "responsável legal" em Configurações (useSession().update({name})).
+      if (trigger === 'update' && session?.name) {
+        token.name = session.name;
       }
       return token;
     },

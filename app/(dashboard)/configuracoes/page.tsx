@@ -1,13 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import { toast } from 'sonner';
-import { Building2, Settings } from 'lucide-react';
+import { Building2, User } from 'lucide-react';
 
 export default function SettingsPage() {
   const queryClient = useQueryClient();
+  const { update: updateSession } = useSession();
 
   const { data, isLoading } = useQuery({
     queryKey: ['tenant', 'me'],
@@ -22,6 +24,7 @@ export default function SettingsPage() {
     zipCode: '',
     address: '',
     city: '',
+    legalRepresentativeName: '',
   });
   const [isFetchingCep, setIsFetchingCep] = useState(false);
 
@@ -36,14 +39,18 @@ export default function SettingsPage() {
         zipCode: tenant.zipCode || '',
         address: tenant.address || '',
         city: tenant.city || '',
+        legalRepresentativeName: tenant.legalRepresentativeName || '',
       });
     }
   }, [data]);
 
   const mutation = useMutation({
     mutationFn: (payload: any) => api.patch('/tenants/me', payload),
-    onSuccess: () => {
+    onSuccess: async (_, payload: any) => {
       queryClient.invalidateQueries({ queryKey: ['tenant', 'me'] });
+      if (payload.legalRepresentativeName) {
+        await updateSession({ name: payload.legalRepresentativeName });
+      }
       toast.success('Dados da empresa atualizados!');
     },
     onError: (err: any) => {
@@ -117,6 +124,7 @@ export default function SettingsPage() {
       zipCode: form.zipCode || undefined,
       address: form.address || undefined,
       city: form.city || undefined,
+      legalRepresentativeName: form.legalRepresentativeName.trim() || undefined,
     });
   };
 
@@ -172,6 +180,18 @@ export default function SettingsPage() {
             <div className="md:col-span-2">
               <label className={labelClass}>Endereço Completo</label>
               <input className={inputClass} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Rua, Número, Bairro" />
+            </div>
+          </div>
+
+          <div className="mb-6 mt-8 flex items-center gap-2 border-b border-slate-200 pb-4 dark:border-slate-800">
+            <User className="h-5 w-5 text-slate-400" />
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Responsável Legal</h2>
+          </div>
+          <div className="grid grid-cols-1 gap-5">
+            <div>
+              <label className={labelClass}>Nome do Responsável Legal</label>
+              <input className={inputClass} value={form.legalRepresentativeName} onChange={(e) => setForm({ ...form, legalRepresentativeName: e.target.value })} placeholder="Nome completo" />
+              <p className="mt-1.5 text-xs text-slate-400 dark:text-slate-500">Esse nome também passa a ser exibido como o seu nome de usuário logado.</p>
             </div>
           </div>
 
