@@ -8,7 +8,7 @@ import { Plus, Search, Wrench, Eye } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/shared-utils';
 
 const typeLabels: Record<string, string> = {
-  PREVENTIVA: 'Preventiva', CORRETIVA: 'Corretiva', REVISAO: 'Revisão', SINISTRO: 'Sinistro',
+  PREVENTIVE: 'Preventiva', CORRECTIVE: 'Corretiva', INSPECTION: 'Revisão',
 };
 const statusColors: Record<string, string> = {
   SCHEDULED: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
@@ -29,7 +29,7 @@ export default function MaintenancePage() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['maintenance', typeFilter],
-    queryFn: () => api.get<any>('/maintenance', { type: typeFilter || undefined, limit: 50 }),
+    queryFn: () => api.get<any>('/maintenances', { type: typeFilter || undefined, limit: 50 }),
   });
 
   const maintenances = data?.data?.data || data?.data || [];
@@ -68,7 +68,7 @@ export default function MaintenancePage() {
             <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
               {maintenances.map((m: any) => (
                 <tr key={m._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                  <td className="px-4 py-3 text-sm font-medium text-slate-900 dark:text-white">{m.vehicleId?.plate || '-'}</td>
+                  <td className="px-4 py-3 text-sm font-medium text-slate-900 dark:text-white">{m.vehicleId?.licensePlate || '-'}</td>
                   <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400">{typeLabels[m.type] || m.type}</td>
                   <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 max-w-xs truncate">{m.description}</td>
                   <td className="px-4 py-3 text-sm font-medium text-slate-900 dark:text-white">{formatCurrency(m.totalCost || 0)}</td>

@@ -26,8 +26,8 @@ export default function EditDriverPage() {
   });
 
   useEffect(() => {
-    if (data?.data) {
-      const driver = data.data;
+    const driver = data?.data || data;
+    if (driver) {
       setForm({
         name: driver.name || '',
         cpf: driver.cpf || '',

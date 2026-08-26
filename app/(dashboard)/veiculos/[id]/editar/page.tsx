@@ -26,8 +26,8 @@ export default function EditVehiclePage() {
   });
 
   useEffect(() => {
-    if (data?.data) {
-      const v = data.data;
+    const v = data?.data || data;
+    if (v) {
       setForm({
         plate: v.plate || v.licensePlate || '',
         renavam: v.renavam || '',
