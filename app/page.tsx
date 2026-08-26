@@ -1,549 +1,327 @@
 import Link from 'next/link';
 
+const shotStats = [
+  { label: 'Veículos', value: '50' },
+  { label: 'Aluguéis ativos', value: '19' },
+  { label: 'Adimplência', value: '70%' },
+];
+
+const logos = ['ParanáCar', 'RotaFrota', 'MoveAuto', 'CuritibaVeículos'];
+
+const benefits = [
+  {
+    title: 'Controle de veículos',
+    desc: 'Cadastro completo da frota, documentação e status — alugado, disponível ou em manutenção.',
+    icon: (
+      <path d="M3 13L4.5 8.2C4.8 7.3 5.6 6.7 6.6 6.7H13.4C14.4 6.7 15.2 7.3 15.5 8.2L17 13M2 13H18V17H2V13ZM6 17V15.4M14 17V15.4" />
+    ),
+  },
+  {
+    title: 'Gestão de motoristas',
+    desc: 'CPF, CNH e histórico de cada motorista de app vinculado ao veículo que ele dirige.',
+    icon: (
+      <path d="M7 6.5C8.65685 6.5 10 5.15685 10 3.5C10 1.84315 8.65685 0.5 7 0.5M1.5 17C1.5 13.6863 3.68629 11.5 7 11.5C10.3137 11.5 12.5 13.6863 12.5 17" />
+    ),
+  },
+  {
+    title: 'Aluguéis em dia',
+    desc: 'Contratos ativos, vencimentos e devoluções acompanhados em tempo real.',
+    icon: <path d="M2 8.5H18M6 2V5.5M14 2V5.5M4 4H16C17.1046 4 18 4.89543 18 6V16C18 17.1046 17.1046 18 16 18H4C2.89543 18 2 17.1046 2 16V6C2 4.89543 2.89543 4 4 4Z" />,
+  },
+  {
+    title: 'Financeiro consolidado',
+    desc: 'Receita contratada, recebida e inadimplência da frota em um painel só.',
+    icon: (
+      <path d="M10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2ZM10 5.3V14.7M12.7 7.3C12.7 6.3 11.6 5.5 10.2 5.5C8.7 5.5 7.6 6.3 7.6 7.4C7.6 8.4 8.5 8.9 10 9.2C11.7 9.5 12.7 10.1 12.7 11.2C12.7 12.3 11.6 13.1 10.1 13.1C8.7 13.1 7.5 12.4 7.4 11.4" />
+    ),
+  },
+];
+
+const stats = [
+  { value: '3.400+', label: 'veículos gerenciados' },
+  { value: '180+', label: 'locadoras ativas' },
+  { value: 'R$ 12M', label: 'em contratos processados' },
+  { value: '99,9%', label: 'uptime do sistema' },
+];
+
+const plans = [
+  {
+    name: 'Starter',
+    price: '149',
+    desc: 'Locadoras começando',
+    highlight: false,
+    features: ['Até 20 veículos', 'Contratos digitais', 'Financeiro básico', 'Suporte por chat'],
+  },
+  {
+    name: 'Pro',
+    price: '349',
+    desc: 'Locadoras em crescimento',
+    highlight: true,
+    features: ['Até 100 veículos', 'Multas + Detran', 'IA preditiva', 'Suporte prioritário'],
+  },
+  {
+    name: 'Enterprise',
+    price: '649',
+    desc: 'Grandes frotas e redes',
+    highlight: false,
+    features: ['Veículos ilimitados', 'Multi-unidades', 'Gerente de conta', 'Integração ERP'],
+  },
+];
+
+// Barras pareadas (contratado vs. recebido) — mesmo componente visual do gráfico do dashboard.
+const chartRaw: [number, number][] = [[62, 48], [70, 55], [58, 50], [80, 60], [74, 68], [86, 63]];
+const CHART_MAX = 90, CHART_TOP = 6, CHART_H = 100;
+const chartBars = (() => {
+  let x = 8;
+  return chartRaw.map(([a, b]) => {
+    const h1 = (a / CHART_MAX) * CHART_H;
+    const h2 = (b / CHART_MAX) * CHART_H;
+    const bar = { x, y1: CHART_TOP + CHART_H - h1, h1, x2: x + 15, y2: CHART_TOP + CHART_H - h2, h2 };
+    x += 64;
+    return bar;
+  });
+})();
+
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#060B18] text-white overflow-x-hidden font-[family-name:var(--font-geist-sans)]">
+    <div className="min-h-screen bg-white text-slate-900">
 
-      {/* ── NAV ── */}
-      <nav className="fixed top-0 inset-x-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 border-b border-white/5 backdrop-blur-md bg-[#060B18]/80">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg overflow-hidden shadow-lg shadow-blue-500/30">
-            <img src="/logo.jpg?v=2" alt="Frotly Logo" className="w-full h-full object-cover" />
-          </div>
-          <span className="text-xl font-bold tracking-tight">Frotly</span>
-        </div>
-        <div className="hidden md:flex items-center gap-8 text-sm text-slate-400">
-          <a href="#funcionalidades" className="hover:text-white transition-colors">Funcionalidades</a>
-          <a href="#como-funciona" className="hover:text-white transition-colors">Como funciona</a>
-          <a href="#planos" className="hover:text-white transition-colors">Planos</a>
-          <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link href="/login" className="text-sm text-slate-400 hover:text-white transition-colors px-4 py-2">
-            Entrar
+      {/* NAV */}
+      <header className="border-b border-slate-100">
+        <div className="mx-auto flex h-16 max-w-6xl items-center gap-8 px-6">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="h-8 w-8 overflow-hidden rounded-lg shadow-md shadow-blue-500/20">
+              <img src="/logo.jpg?v=2" alt="Frotly" className="h-full w-full object-cover" />
+            </div>
+            <div className="flex flex-col leading-none">
+              <span className="text-[15px] font-bold tracking-tight text-slate-900">Frotly</span>
+              <span className="text-[10.5px] font-semibold uppercase tracking-wider text-slate-400">Fleet OS</span>
+            </div>
           </Link>
-          <Link href="/registro" className="text-sm bg-blue-600 hover:bg-blue-500 transition-colors px-4 py-2 rounded-lg font-medium shadow-lg shadow-blue-600/20">
-            Começar grátis
-          </Link>
-        </div>
-      </nav>
-
-      {/* ── HERO ── */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 pt-20">
-        {/* Glow background */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-blue-600/10 rounded-full blur-3xl" />
-          <div className="absolute top-1/3 left-1/4 w-[400px] h-[300px] bg-cyan-500/8 rounded-full blur-3xl" />
-          <div className="absolute top-1/4 right-1/4 w-[300px] h-[300px] bg-indigo-600/8 rounded-full blur-3xl" />
-        </div>
-
-        {/* Grid lines */}
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
-            backgroundSize: '60px 60px',
-          }}
-        />
-
-        <div className="relative text-center max-w-4xl mx-auto">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-sm font-medium mb-8">
-            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-            Novo: Motor de IA integrado para análise preditiva
-          </div>
-
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight mb-6">
-            O Sistema Completo para
-            <span className="block bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-              Sua Locadora de Veículos.
-            </span>
-          </h1>
-
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Contratos, frota, motoristas, multas, manutenção e financeiro em um único lugar. Sem planilhas, sem dor de cabeça.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <nav className="flex gap-6">
+            <a href="#produto" className="text-[13px] font-medium text-slate-600 hover:text-slate-900">Produto</a>
+            <a href="#planos" className="text-[13px] font-medium text-slate-600 hover:text-slate-900">Planos</a>
+            <a href="#locadoras" className="text-[13px] font-medium text-slate-600 hover:text-slate-900">Para locadoras</a>
+          </nav>
+          <div className="ml-auto flex items-center gap-3.5">
+            <Link href="/login" className="text-[13px] font-medium text-slate-900">Entrar</Link>
             <Link
               href="/registro"
-              id="cta-hero-start"
-              className="px-8 py-4 bg-blue-600 hover:bg-blue-500 rounded-xl font-semibold text-lg transition-all shadow-xl shadow-blue-600/30 hover:shadow-blue-500/40 hover:-translate-y-0.5"
+              className="rounded-lg bg-blue-600 px-4.5 py-2.5 text-[13px] font-semibold text-white shadow-lg shadow-blue-600/30 hover:bg-blue-700"
             >
-              Começar grátis — 14 dias
+              Teste grátis de 7 dias
             </Link>
-            <a
-              href="#como-funciona"
-              id="cta-hero-demo"
-              className="px-8 py-4 border border-white/10 hover:border-white/20 rounded-xl font-semibold text-lg transition-all text-slate-300 hover:text-white hover:bg-white/5"
-            >
-              Ver como funciona →
-            </a>
-          </div>
-
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-6">Sem cartão de crédito · Cancele quando quiser</p>
-
-          {/* Dashboard preview */}
-          <div className="mt-16 relative">
-            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#060B18] to-transparent z-10 pointer-events-none" />
-            <div className="relative rounded-2xl border border-white/10 bg-[#0D1525] overflow-hidden shadow-2xl shadow-black/60 p-6">
-              {/* Fake dashboard header */}
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <div className="h-5 w-32 bg-white/10 rounded-md mb-2" />
-                  <div className="h-3 w-48 bg-white/5 rounded-md" />
-                </div>
-                <div className="flex gap-2">
-                  <div className="h-8 w-24 bg-blue-600/20 rounded-lg border border-blue-500/20" />
-                  <div className="h-8 w-24 bg-white/5 rounded-lg" />
-                </div>
-              </div>
-              {/* Fake stat cards */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                {[
-                  { label: 'Veículos ativos', value: '48', color: 'from-blue-500/20 to-blue-600/10', border: 'border-blue-500/20', accent: 'bg-blue-500' },
-                  { label: 'Contratos ativos', value: '31', color: 'from-cyan-500/20 to-cyan-600/10', border: 'border-cyan-500/20', accent: 'bg-cyan-500' },
-                  { label: 'Receita mensal', value: 'R$ 48k', color: 'from-emerald-500/20 to-emerald-600/10', border: 'border-emerald-500/20', accent: 'bg-emerald-500' },
-                  { label: 'Manutenções', value: '7', color: 'from-amber-500/20 to-amber-600/10', border: 'border-amber-500/20', accent: 'bg-amber-500' },
-                ].map((card) => (
-                  <div key={card.label} className={`p-4 rounded-xl border ${card.border} bg-gradient-to-br ${card.color}`}>
-                    <div className="text-xs text-slate-400 mb-2">{card.label}</div>
-                    <div className="text-2xl font-bold">{card.value}</div>
-                    <div className={`mt-2 h-1 w-16 rounded-full ${card.accent} opacity-60`} />
-                  </div>
-                ))}
-              </div>
-              {/* Fake table */}
-              <div className="rounded-xl border border-white/5 bg-white/2 overflow-hidden">
-                <div className="grid grid-cols-4 text-xs text-slate-500 dark:text-slate-400 px-4 py-3 border-b border-white/5 bg-white/3">
-                  <span>Veículo</span><span>Motorista</span><span>Status</span><span>Retorno</span>
-                </div>
-                {[
-                  { veiculo: 'Toyota Corolla • ABC-1234', motorista: 'Carlos Mendes', status: 'Alugado', statusColor: 'text-blue-400 bg-blue-500/10', retorno: '15/07' },
-                  { veiculo: 'Honda Civic • DEF-5678', motorista: 'Ana Souza', status: 'Disponível', statusColor: 'text-emerald-400 bg-emerald-500/10', retorno: '—' },
-                  { veiculo: 'VW Polo • GHI-9012', motorista: 'João Silva', status: 'Manutenção', statusColor: 'text-amber-400 bg-amber-500/10', retorno: '18/07' },
-                ].map((row) => (
-                  <div key={row.veiculo} className="grid grid-cols-4 text-sm px-4 py-3 border-b border-white/5 last:border-0">
-                    <span className="text-white font-medium truncate">{row.veiculo}</span>
-                    <span className="text-slate-400">{row.motorista}</span>
-                    <span><span className={`text-xs px-2 py-1 rounded-full font-medium ${row.statusColor}`}>{row.status}</span></span>
-                    <span className="text-slate-400">{row.retorno}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* ── LOGOS / TRUST ── */}
-      <section className="py-16 border-y border-white/5 bg-white/[0.02]">
-        <div className="max-w-5xl mx-auto px-6">
-          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mb-8 uppercase tracking-widest">Construído com segurança e confiabilidade</p>
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16">
-            {[
-              { icon: '🔒', label: 'Adequado à LGPD' },
-              { icon: '🏢', label: 'Multi-Tenant Isolado' },
-              { icon: '🤖', label: 'IA Integrada' },
-              { icon: '☁️', label: '99.9% Disponível' },
-              { icon: '📱', label: '100% Responsivo' },
-            ].map((item) => (
-              <div key={item.label} className="flex items-center gap-2 text-slate-400">
-                <span className="text-xl">{item.icon}</span>
-                <span className="text-sm font-medium">{item.label}</span>
-              </div>
-            ))}
-          </div>
+      {/* HERO */}
+      <section className="mx-auto max-w-5xl px-6 pb-16 pt-20 text-center md:pt-24">
+        <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3.5 py-1.5 text-xs font-bold text-blue-600">
+          <span className="h-1.5 w-1.5 rounded-full bg-blue-600" />
+          Feito para locadoras do Paraná
         </div>
-      </section>
-
-      {/* ── FUNCIONALIDADES ── */}
-      <section id="funcionalidades" className="py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-sm font-medium mb-4">
-              Funcionalidades
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Gestão de Frotas e Controle de Aluguéis</h2>
-            <p className="text-slate-400 text-lg max-w-2xl mx-auto">Do contrato ao financeiro, da vistoria ao Detran. Um sistema para locadora de veículos completo para escalar sem complicação.</p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                icon: '📋',
-                title: 'Contratos & Aluguéis',
-                desc: 'Emita e gerencie contratos digitais, histórico de locações por cliente e cálculo automático de valores.',
-                color: 'blue',
-              },
-              {
-                icon: '🚗',
-                title: 'Controle de Frota',
-                desc: 'Visão completa de cada veículo: status, quilometragem, documentação, histórico de manutenção e rentabilidade.',
-                color: 'cyan',
-              },
-              {
-                icon: '👤',
-                title: 'Motoristas & CNH',
-                desc: 'Cadastro completo, alerta automático de vencimento de CNH, histórico de locações e pontos de infrações.',
-                color: 'indigo',
-              },
-              {
-                icon: '💰',
-                title: 'Financeiro Completo',
-                desc: 'Fluxo de caixa, contas a pagar e receber, DRE por período, custo total por veículo e rentabilidade da frota.',
-                color: 'emerald',
-              },
-              {
-                icon: '🚦',
-                title: 'Multas & Detran',
-                desc: 'Consulta e gestão de infrações, controle de prazos para recurso, notificações automáticas e relatório de pontos.',
-                color: 'amber',
-              },
-              {
-                icon: '🤖',
-                title: 'IA para Análise',
-                desc: 'Motor de inteligência artificial integrado para análise preditiva de manutenção e insights operacionais em linguagem natural.',
-                color: 'violet',
-              },
-              {
-                icon: '🔧',
-                title: 'Manutenção Preventiva',
-                desc: 'Agendamento por KM ou data, ordens de serviço digitais, histórico completo e alerta de revisões programadas.',
-                color: 'rose',
-              },
-              {
-                icon: '⛽',
-                title: 'Abastecimento',
-                desc: 'Registro de abastecimentos com consumo médio calculado automaticamente por veículo e por motorista.',
-                color: 'orange',
-              },
-              {
-                icon: '🔔',
-                title: 'Alertas Automáticos',
-                desc: 'Notificações via e-mail e WhatsApp para vencimento de documentos, revisões, multas e contratos próximos do fim.',
-                color: 'teal',
-              },
-            ].map((feat) => (
-              <div
-                key={feat.title}
-                className="group relative p-6 rounded-2xl border border-white/8 bg-white/3 hover:bg-white/6 hover:border-white/15 transition-all duration-300 hover:-translate-y-1"
-              >
-                <div className="text-3xl mb-4">{feat.icon}</div>
-                <h3 className="text-lg font-semibold mb-2">{feat.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{feat.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── COMO FUNCIONA ── */}
-      <section id="como-funciona" className="py-24 px-6 bg-white/[0.015] border-y border-white/5">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-sm font-medium mb-4">
-              Como funciona
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Software para Locadora de Veículos Simples de Usar</h2>
-            <p className="text-slate-400 text-lg max-w-xl mx-auto">Em menos de 30 minutos sua locadora de veículos estará operando no Frotly.</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                step: '01',
-                title: 'Cadastre sua frota',
-                desc: 'Adicione seus veículos com placa, documentação e fotos. Importe de planilhas ou cadastre manualmente em minutos.',
-              },
-              {
-                step: '02',
-                title: 'Gerencie contratos',
-                desc: 'Crie contratos para cada locação, controle datas de retorno, calcule valores automaticamente e receba pagamentos.',
-              },
-              {
-                step: '03',
-                title: 'Acompanhe resultados',
-                desc: 'Dashboard com visão completa da sua operação: ocupação da frota, receita, despesas e indicadores de performance.',
-              },
-            ].map((step, i) => (
-              <div key={step.step} className="relative text-center">
-                <div className="relative z-10">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/10 border border-blue-500/30 flex items-center justify-center mx-auto mb-6">
-                    <span className="text-2xl font-bold text-blue-400">{step.step}</span>
-                  </div>
-                  <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
-                  <p className="text-slate-400 leading-relaxed">{step.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── BENCHMARK / COMPARATIVO ── */}
-      <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-400 text-sm font-medium mb-4">
-            Por que Frotly?
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Feito para locadoras reais</h2>
-          <p className="text-slate-400 text-lg mb-16 max-w-2xl mx-auto">
-            Sistemas corporativos são caros e complexos demais. Planilhas não escalam. O Frotly foi criado exatamente para o meio: locadoras que querem crescer com tecnologia.
-          </p>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { label: 'Veículos gerenciados', value: '+5.000', sub: 'em locadoras parceiras' },
-              { label: 'Contratos emitidos', value: '+12.000', sub: 'no último ano' },
-              { label: 'Receita gerada', value: 'R$ 8M+', sub: 'em locações controladas' },
-            ].map((stat) => (
-              <div key={stat.label} className="p-8 rounded-2xl border border-white/8 bg-white/3">
-                <div className="text-4xl font-extrabold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-2">{stat.value}</div>
-                <div className="font-semibold mb-1">{stat.label}</div>
-                <div className="text-slate-500 dark:text-slate-400 text-sm">{stat.sub}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── PLANOS ── */}
-      <section id="planos" className="py-24 px-6 bg-white/[0.015] border-y border-white/5">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-sm font-medium mb-4">
-              Planos & Preços
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Simples e sem surpresas</h2>
-            <p className="text-slate-400 text-lg">14 dias grátis em qualquer plano. Sem cartão de crédito.</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                name: 'Starter',
-                price: 'R$ 149',
-                period: '/mês',
-                desc: 'Para locadoras que estão começando',
-                highlight: false,
-                features: ['Até 20 veículos', 'Contratos digitais', 'Controle de motoristas', 'Financeiro básico', 'Alertas por e-mail', 'Suporte por chat'],
-              },
-              {
-                name: 'Pro',
-                price: 'R$ 349',
-                period: '/mês',
-                desc: 'Para locadoras em crescimento',
-                highlight: true,
-                badge: 'Mais popular',
-                features: ['Até 100 veículos', 'Tudo do Starter', 'Gestão de multas + Detran', 'Alertas via WhatsApp', 'Relatórios avançados', 'IA para análise preditiva', 'API de integração', 'Suporte prioritário'],
-              },
-              {
-                name: 'Enterprise',
-                price: 'Sob consulta',
-                period: '',
-                desc: 'Para grandes frotas e redes de locadoras',
-                highlight: false,
-                features: ['Veículos ilimitados', 'Tudo do Pro', 'Multi-unidades / Multi-tenant', 'Customizações', 'SLA garantido', 'Gerente de conta dedicado', 'Integração com ERP'],
-              },
-            ].map((plan) => (
-              <div
-                key={plan.name}
-                className={`relative p-8 rounded-2xl border transition-all ${
-                  plan.highlight
-                    ? 'border-blue-500/60 bg-gradient-to-b from-blue-500/10 to-blue-600/5 shadow-xl shadow-blue-500/10'
-                    : 'border-white/8 bg-white/3'
-                }`}
-              >
-                {plan.highlight && plan.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-blue-600 text-white text-xs font-bold rounded-full shadow-lg">
-                    {plan.badge}
-                  </div>
-                )}
-                <div className="mb-6">
-                  <h3 className="text-xl font-bold mb-1">{plan.name}</h3>
-                  <p className="text-slate-400 text-sm mb-4">{plan.desc}</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-extrabold">{plan.price}</span>
-                    {plan.period && <span className="text-slate-400">{plan.period}</span>}
-                  </div>
-                </div>
-                <Link
-                  href="/registro"
-                  id={`cta-plan-${plan.name.toLowerCase()}`}
-                  className={`block w-full text-center py-3 px-6 rounded-xl font-semibold transition-all mb-8 ${
-                    plan.highlight
-                      ? 'bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-600/30'
-                      : 'bg-white/8 hover:bg-white/12 border border-white/10'
-                  }`}
-                >
-                  {plan.name === 'Enterprise' ? 'Falar com vendas' : 'Começar grátis'}
-                </Link>
-                <ul className="space-y-3">
-                  {plan.features.map((feat) => (
-                    <li key={feat} className="flex items-center gap-3 text-sm text-slate-300">
-                      <svg className="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {feat}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── DEPOIMENTOS ── */}
-      <section className="py-24 px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Quem já usa o Frotly</h2>
-            <p className="text-slate-400 text-lg">Locadoras de todo o Brasil confiam no Frotly para crescer.</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                quote: 'Antes eu controlava tudo em planilha Excel. Com o Frotly, tenho visão completa da frota em tempo real. Reduzi inadimplência em 30% no primeiro mês.',
-                name: 'Carlos R.',
-                role: 'Dono · Locadora Speed',
-                city: 'Curitiba, PR',
-                avatar: 'CR',
-                color: 'from-blue-500 to-cyan-500',
-              },
-              {
-                quote: 'O alerta automático de vencimento de CNH me salvou de várias dores de cabeça. O suporte responde rápido e as atualizações são constantes.',
-                name: 'Mariana T.',
-                role: 'Gerente · Rent Fast',
-                city: 'São Paulo, SP',
-                avatar: 'MT',
-                color: 'from-violet-500 to-indigo-500',
-              },
-              {
-                quote: 'Finalmente um sistema que não é nem caro demais nem simples demais. Cabe no orçamento da minha locadora pequena e tem tudo que eu preciso.',
-                name: 'João P.',
-                role: 'Proprietário · JPA Veículos',
-                city: 'Fortaleza, CE',
-                avatar: 'JP',
-                color: 'from-emerald-500 to-teal-500',
-              },
-            ].map((t) => (
-              <div key={t.name} className="p-6 rounded-2xl border border-white/8 bg-white/3 flex flex-col gap-4">
-                <div className="flex gap-1 text-amber-400 text-sm">{'★★★★★'}</div>
-                <p className="text-slate-300 text-sm leading-relaxed flex-1">"{t.quote}"</p>
-                <div className="flex items-center gap-3 pt-2 border-t border-white/8">
-                  <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${t.color} flex items-center justify-center text-white font-bold text-sm shrink-0`}>
-                    {t.avatar}
-                  </div>
-                  <div>
-                    <div className="font-semibold text-sm">{t.name}</div>
-                    <div className="text-slate-500 dark:text-slate-400 text-xs">{t.role} · {t.city}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FAQ ── */}
-      <section id="faq" className="py-24 px-6 bg-white/[0.015] border-y border-white/5">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Perguntas frequentes</h2>
-            <p className="text-slate-400">Não encontrou o que procurava? Fale com a gente via chat.</p>
-          </div>
-          <div className="space-y-4">
-            {[
-              {
-                q: 'Preciso instalar algum software?',
-                a: 'Não! O Frotly é 100% em nuvem. Funciona diretamente no navegador do computador ou celular, sem instalação.',
-              },
-              {
-                q: 'Posso importar meus dados atuais?',
-                a: 'Sim. Oferecemos importação via planilha Excel/CSV para veículos, motoristas e histórico de contratos. Nossa equipe auxilia na migração gratuitamente.',
-              },
-              {
-                q: 'O que acontece após os 14 dias grátis?',
-                a: 'Você escolhe um plano e continua usando normalmente. Se não quiser continuar, não cobramos nada. Sem letras miúdas.',
-              },
-              {
-                q: 'É seguro? Meus dados são protegidos?',
-                a: 'Totalmente. Utilizamos criptografia de ponta a ponta, backups diários e arquitetura multi-tenant isolada, o que significa que os dados da sua empresa são completamente separados dos demais clientes.',
-              },
-              {
-                q: 'Consigo integrar com outros sistemas?',
-                a: 'O plano Pro e Enterprise incluem acesso à nossa API REST. Integramos com meios de pagamento, WhatsApp, e-mail e sistemas de contabilidade.',
-              },
-              {
-                q: 'Tem suporte em português?',
-                a: 'Sim! Suporte 100% em português por chat, e-mail e WhatsApp. Equipe brasileira, atendimento de segunda a sexta das 8h às 18h.',
-              },
-            ].map((item) => (
-              <details
-                key={item.q}
-                className="group p-6 rounded-2xl border border-white/8 bg-white/3 hover:border-white/15 transition-colors cursor-pointer"
-              >
-                <summary className="flex items-center justify-between font-semibold text-white list-none">
-                  {item.q}
-                  <svg className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0 ml-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </summary>
-                <p className="mt-4 text-slate-400 leading-relaxed">{item.a}</p>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA FINAL ── */}
-      <section className="py-32 px-6 relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-[400px] bg-gradient-to-r from-blue-600/10 via-cyan-500/8 to-indigo-600/10 blur-3xl" />
-        </div>
-        <div className="relative max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">
-            Pronto para transformar
-            <span className="block bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              sua locadora?
-            </span>
-          </h2>
-          <p className="text-xl text-slate-400 mb-10">
-            Junte-se a centenas de locadoras que já saíram das planilhas e crescem com inteligência.
-          </p>
+        <h1 className="mx-auto mt-5 max-w-3xl text-[52px] font-bold leading-[1.08] tracking-tight text-slate-900">
+          Sua frota de aluguel,<br />sob controle total
+        </h1>
+        <p className="mx-auto mt-5 max-w-xl text-[17px] leading-relaxed text-slate-500">
+          Contratos, multas, manutenção e financeiro de veículos alugados a motoristas de app — tudo em um sistema só.
+          Cadastre sua locadora e comece a usar hoje.
+        </p>
+        <div className="mt-8 flex items-center justify-center gap-3">
           <Link
             href="/registro"
-            id="cta-final"
-            className="inline-flex items-center gap-3 px-10 py-5 bg-blue-600 hover:bg-blue-500 rounded-2xl font-bold text-xl transition-all shadow-2xl shadow-blue-600/40 hover:shadow-blue-500/50 hover:-translate-y-1"
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-[14.5px] font-semibold text-white shadow-lg shadow-blue-600/40 hover:bg-blue-700"
           >
-            Criar conta grátis
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+            Começar teste grátis
+            <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 4L14 10L8 16" /></svg>
           </Link>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mt-5">14 dias grátis · Sem cartão de crédito · Cancele quando quiser</p>
+          <a href="#planos" className="rounded-lg border border-slate-200 px-5 py-3 text-[14.5px] font-medium text-slate-900">Ver planos e preços</a>
+        </div>
+        <p className="mt-3.5 text-xs text-slate-400">7 dias grátis · sem cartão obrigatório no cadastro · cancele quando quiser</p>
+
+        {/* PRODUCT SHOT */}
+        <div className="mx-auto mt-14 max-w-4xl overflow-hidden rounded-2xl border border-slate-200 text-left shadow-2xl shadow-slate-900/10">
+          <div className="flex items-center gap-1.5 border-b border-slate-100 bg-slate-50 px-4 py-3">
+            <span className="h-2.5 w-2.5 rounded-full bg-slate-200" />
+            <span className="h-2.5 w-2.5 rounded-full bg-slate-200" />
+            <span className="h-2.5 w-2.5 rounded-full bg-slate-200" />
+          </div>
+          <div className="flex min-h-[400px]">
+            <div className="hidden w-[190px] shrink-0 flex-col gap-1 border-r border-slate-100 p-3 sm:flex">
+              <div className="flex items-center gap-2.5 rounded-lg bg-blue-50 px-2.5 py-2 text-[12.5px] font-medium text-blue-600">
+                <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="7" height="7" rx="1.5" /><rect x="11" y="2" width="7" height="7" rx="1.5" /><rect x="2" y="11" width="7" height="7" rx="1.5" /><rect x="11" y="11" width="7" height="7" rx="1.5" /></svg>
+                Dashboard
+              </div>
+              <div className="flex items-center gap-2.5 px-2.5 py-2 text-[12.5px] text-slate-500">
+                <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 13L4.5 8.2C4.8 7.3 5.6 6.7 6.6 6.7H13.4C14.4 6.7 15.2 7.3 15.5 8.2L17 13" /><rect x="2" y="13" width="16" height="4" rx="1.3" /><circle cx="6" cy="17" r="1.6" /><circle cx="14" cy="17" r="1.6" /></svg>
+                Veículos
+              </div>
+              <div className="flex items-center gap-2.5 px-2.5 py-2 text-[12.5px] text-slate-500">
+                <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="7" cy="6.5" r="3" /><path d="M1.5 17C1.5 13.7 3.9 11.5 7 11.5C10.1 11.5 12.5 13.7 12.5 17" /></svg>
+                Motoristas
+              </div>
+              <div className="flex items-center gap-2.5 px-2.5 py-2 text-[12.5px] text-slate-500">
+                <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="10" cy="10" r="8" /><path d="M10 5.3V14.7M12.7 7.3C12.7 6.3 11.6 5.5 10.2 5.5C8.7 5.5 7.6 6.3 7.6 7.4C7.6 8.4 8.5 8.9 10 9.2C11.7 9.5 12.7 10.1 12.7 11.2C12.7 12.3 11.6 13.1 10.1 13.1C8.7 13.1 7.5 12.4 7.4 11.4" /></svg>
+                Financeiro
+              </div>
+            </div>
+            <div className="flex-1 p-5">
+              <div className="mb-3 grid grid-cols-3 gap-3">
+                {shotStats.map((s) => (
+                  <div key={s.label} className="rounded-xl border border-slate-200 p-4">
+                    <div className="text-[11.5px] text-slate-400">{s.label}</div>
+                    <div className="mt-1.5 text-[22px] font-bold text-slate-900">{s.value}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="rounded-xl border border-slate-200 p-4.5">
+                <div className="mb-2.5 flex items-center justify-between">
+                  <div className="text-[12.5px] font-semibold text-slate-900">Caixa &amp; Finanças de Aluguel</div>
+                  <div className="flex gap-3">
+                    <div className="flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-blue-600" /><span className="text-[10.5px] text-slate-500">Contratado</span></div>
+                    <div className="flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /><span className="text-[10.5px] text-slate-500">Recebido</span></div>
+                  </div>
+                </div>
+                <svg width="100%" height="118" viewBox="0 0 400 118" preserveAspectRatio="none">
+                  {[0, 1, 2].map((i) => (
+                    <line key={i} x1="0" y1={6 + 50 * i} x2="400" y2={6 + 50 * i} stroke="#eceef1" strokeWidth="1" />
+                  ))}
+                  {chartBars.map((b, i) => (
+                    <g key={i}>
+                      <rect x={b.x} y={b.y1} width="14" height={b.h1} rx="2.5" fill="#eceef1" />
+                      <rect x={b.x2} y={b.y2} width="14" height={b.h2} rx="2.5" fill="#e93338" />
+                    </g>
+                  ))}
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
-      <footer className="py-12 px-6 border-t border-white/8">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg overflow-hidden">
-                <img src="/logo.jpg?v=2" alt="Frotly Logo" className="w-full h-full object-cover" />
+      {/* PROOF STRIP */}
+      <section className="border-y border-slate-100 bg-slate-50">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-5 px-6 py-7">
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Locadoras que já usam o Frotly</span>
+          <div className="flex flex-wrap gap-9">
+            {logos.map((l) => (
+              <span key={l} className="text-[14.5px] font-bold text-slate-300">{l}</span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* BENEFITS */}
+      <section id="produto" className="mx-auto max-w-5xl px-6 py-20">
+        <div className="mx-auto mb-12 max-w-lg text-center">
+          <h2 className="text-[32px] font-bold tracking-tight text-slate-900">Veículos, motoristas, aluguéis e financeiro — sob controle</h2>
+          <p className="mt-3 text-[14.5px] leading-relaxed text-slate-500">
+            Construído para o dia a dia de quem aluga carro pra motorista de aplicativo — não é uma planilha, é operação.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {benefits.map((b) => (
+            <div key={b.title} className="rounded-2xl border border-slate-200 p-5.5">
+              <div className="mb-3.5 flex h-9.5 w-9.5 items-center justify-center rounded-[10px] bg-blue-50">
+                <svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="currentColor" className="text-blue-600" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">{b.icon}</svg>
               </div>
-              <span className="font-bold text-lg">Frotly</span>
-              <span className="text-slate-600 text-sm ml-2">© 2026 · Todos os direitos reservados</span>
+              <div className="mb-1.5 text-[15px] font-semibold text-slate-900">{b.title}</div>
+              <div className="text-[13px] leading-relaxed text-slate-500">{b.desc}</div>
             </div>
-            <div className="flex items-center gap-6 text-sm text-slate-500 dark:text-slate-400">
-              <a href="#" className="hover:text-white transition-colors">Privacidade</a>
-              <a href="#" className="hover:text-white transition-colors">Termos</a>
-              <a href="#" className="hover:text-white transition-colors">Contato</a>
-              <a href="https://frotly.com.br" className="hover:text-white transition-colors">frotly.com.br</a>
+          ))}
+        </div>
+      </section>
+
+      {/* STATS BAND */}
+      <section className="bg-slate-950">
+        <div className="mx-auto grid max-w-5xl grid-cols-2 gap-6 px-6 py-14 text-center md:grid-cols-4">
+          {stats.map((s) => (
+            <div key={s.label}>
+              <div className="text-[32px] font-bold tracking-tight text-white tabular-nums">{s.value}</div>
+              <div className="mt-1.5 text-[12.5px] text-slate-500">{s.label}</div>
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* PRICING */}
+      <section id="planos" className="mx-auto max-w-5xl px-6 py-20">
+        <div className="mx-auto mb-11 max-w-md text-center">
+          <h2 className="text-[32px] font-bold tracking-tight text-slate-900">Planos para cada tamanho de frota</h2>
+          <p className="mt-3 text-[14.5px] text-slate-500">Sem contrato de fidelidade. Comece grátis por 7 dias em qualquer plano.</p>
+        </div>
+        <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-3">
+          {plans.map((p) => (
+            <div
+              key={p.name}
+              className={`relative rounded-2xl p-7 ${
+                p.highlight ? 'border-2 border-blue-600 bg-slate-950' : 'border border-slate-200 bg-white'
+              }`}
+            >
+              {p.highlight && (
+                <span className="absolute -top-2.5 left-6 rounded-full bg-blue-600 px-3 py-1 text-[10.5px] font-bold text-white">
+                  Mais popular
+                </span>
+              )}
+              <div className={`text-[13.5px] font-semibold ${p.highlight ? 'text-slate-300' : 'text-slate-400'}`}>{p.name}</div>
+              <div className="mt-2.5 flex items-baseline gap-1">
+                <span className={`text-sm font-semibold ${p.highlight ? 'text-slate-400' : 'text-slate-400'}`}>R$</span>
+                <span className={`text-[38px] font-bold tracking-tight tabular-nums ${p.highlight ? 'text-white' : 'text-slate-900'}`}>{p.price}</span>
+                <span className={`text-[13px] ${p.highlight ? 'text-slate-400' : 'text-slate-400'}`}>/mês</span>
+              </div>
+              <div className={`mt-1.5 text-xs ${p.highlight ? 'text-slate-400' : 'text-slate-400'}`}>{p.desc}</div>
+              <div className={`mt-5 flex flex-col gap-2.5 border-t pt-5 ${p.highlight ? 'border-slate-800' : 'border-slate-100'}`}>
+                {p.features.map((f) => (
+                  <div key={f} className="flex items-center gap-2.5">
+                    <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#e93338" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 10.5L8 14.5L16 5.5" /></svg>
+                    <span className={`text-[12.5px] ${p.highlight ? 'text-slate-200' : 'text-slate-700'}`}>{f}</span>
+                  </div>
+                ))}
+              </div>
+              <Link
+                href="/registro"
+                className={`mt-6 block rounded-lg py-2.5 text-center text-[13px] font-semibold ${
+                  p.highlight ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-900'
+                }`}
+              >
+                Assinar {p.name}
+              </Link>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section id="locadoras" className="mx-auto max-w-5xl px-6 pb-20">
+        <div className="rounded-[20px] bg-gradient-to-br from-blue-600 to-blue-800 px-14 py-14 text-center">
+          <h2 className="text-[28px] font-bold tracking-tight text-white">Pronto pra organizar sua locadora?</h2>
+          <p className="mt-2.5 text-sm text-white/85">Cadastre-se em 2 minutos. Seu primeiro usuário admin é criado na hora.</p>
+          <Link
+            href="/registro"
+            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-white px-7 py-3 text-sm font-semibold text-blue-600"
+          >
+            Começar teste grátis de 7 dias
+            <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="#e93338" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 4L14 10L8 16" /></svg>
+          </Link>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-slate-100">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-7">
+          <div className="flex items-center gap-2.5">
+            <div className="h-5.5 w-5.5 rounded-md bg-gradient-to-br from-blue-600 to-blue-700" />
+            <span className="text-[12.5px] font-bold text-slate-900">Frotly</span>
+            <span className="text-[11.5px] text-slate-400">© 2026</span>
+          </div>
+          <div className="flex gap-5">
+            <a href="#" className="text-xs font-medium text-slate-500">Termos</a>
+            <a href="#" className="text-xs font-medium text-slate-500">Privacidade</a>
+            <a href="#" className="text-xs font-medium text-slate-500">Suporte</a>
           </div>
         </div>
       </footer>
-
     </div>
   );
 }

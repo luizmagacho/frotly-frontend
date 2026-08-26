@@ -21,6 +21,13 @@
 
   /* Gray adjustments */
   --color-slate-500: #4b4b4b; /* Exact Roger Gray! */
+
+  /* Refined dark-mode neutrals (2026 redesign) — warmer near-black surfaces
+     instead of Tailwind's default cool slate, matching the design proposal. */
+  --color-slate-950: #0c0c0c; /* page background */
+  --color-slate-900: #141414; /* card / sidebar background */
+  --color-slate-800: #232323; /* borders */
+  --color-slate-400: #a3a3a3; /* muted text on dark surfaces */
 }
 
 :root {
