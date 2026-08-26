@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSession, signOut, getSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
+import { api } from '@/lib/api-client';
 import {
   LayoutDashboard, Car, Users, FileText, Wrench, AlertTriangle,
   Receipt, Shield, Fuel, BarChart3, Bell, Settings, Menu, X,
@@ -41,6 +42,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { theme, resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [planName, setPlanName] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!session) return;
+    api
+      .get<any>('/billing/trial/status')
+      .then((res) => setPlanName(res?.planName || res?.data?.planName || null))
+      .catch(() => setPlanName(null));
+  }, [session]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -188,6 +198,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </button>
 
           <div className="flex items-center gap-2 ml-auto">
+            <div className="hidden sm:flex items-center gap-2 mr-2">
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                {session?.user?.name}
+              </span>
+              {planName && (
+                <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-400">
+                  {planName}
+                </span>
+              )}
+            </div>
+
             <button
               onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
               className="rounded-lg p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
