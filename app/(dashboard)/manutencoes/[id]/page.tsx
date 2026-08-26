@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import { toast } from 'sonner';
-import { ArrowLeft, CheckCircle2, Wrench } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Pencil, Wrench } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/shared-utils';
 
 const typeLabels: Record<string, string> = {
@@ -76,6 +76,12 @@ function MaintenanceDetail({ id }: { id: string }) {
         <span className={`rounded-full px-3 py-1 text-xs font-medium ${statusColors[maintenance.status] || ''}`}>
           {statusLabels[maintenance.status] || maintenance.status}
         </span>
+        <Link
+          href={`/manutencoes/${maintenance._id}/editar`}
+          className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+        >
+          <Pencil className="h-4 w-4" /> Editar
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 gap-4 rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900 sm:grid-cols-2">
