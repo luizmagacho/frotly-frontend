@@ -67,16 +67,23 @@ export default function PlanosPage() {
   const handlePortal = async () => {
     try {
       setLoadingPlan('PORTAL');
-      const response = await api.get('/billing/portal') as any;
-      if (response.data && response.data.url) {
-        window.location.href = response.data.url;
+      const response = await api.get<any>('/billing/portal');
+      const url = response?.url || response?.data?.url;
+      if (url) {
+        window.location.href = url;
+      } else {
+        toast.error('Não foi possível abrir o portal financeiro.');
+        setLoadingPlan(null);
       }
-    } catch (error) {
-      console.error('Erro ao abrir portal:', error);
-      alert('Sua locadora ainda não possui uma assinatura ativa no Stripe.');
+    } catch (error: any) {
+      const msg = error?.response?.data?.message;
+      toast.error(Array.isArray(msg) ? msg[0] : (msg || error.message || 'Sua locadora ainda não possui uma assinatura ativa no Stripe.'));
       setLoadingPlan(null);
     }
   };
+
+  const planOrder = ['BASIC', 'PRO', 'ENTERPRISE'];
+  const currentTier = currentPlan ? planOrder.indexOf(currentPlan) : -1;
 
   return (
     <div className="mx-auto max-w-6xl pb-24">
@@ -122,6 +129,8 @@ export default function PlanosPage() {
       <div className="grid gap-8 md:grid-cols-3">
         {plans.map((plan) => {
           const isCurrent = currentPlan === plan.id;
+          const planTier = planOrder.indexOf(plan.id);
+          const isDowngrade = currentTier >= 0 && planTier < currentTier;
           const price = isAnnual ? plan.monthlyPrice * 0.9 : plan.monthlyPrice;
 
           return (
@@ -173,9 +182,10 @@ export default function PlanosPage() {
 
               <button
                 onClick={() => handleSubscribe(plan.id)}
-                disabled={loadingPlan === plan.id || isCurrent}
+                disabled={loadingPlan === plan.id || isCurrent || isDowngrade}
+                title={isDowngrade ? 'Não é possível fazer downgrade de plano. Entre em contato com o suporte.' : undefined}
                 className={`flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-all ${
-                  isCurrent
+                  isCurrent || isDowngrade
                     ? 'cursor-not-allowed bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500'
                     : plan.highlight
                     ? 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-md hover:shadow-blue-500/20'
@@ -186,6 +196,10 @@ export default function PlanosPage() {
                   <><Loader2 className="h-4 w-4 animate-spin" /> Processando...</>
                 ) : isCurrent ? (
                   'Plano Atual'
+                ) : isDowngrade ? (
+                  'Downgrade indisponível'
+                ) : currentTier >= 0 ? (
+                  'Fazer Upgrade'
                 ) : (
                   'Assinar Plano'
                 )}

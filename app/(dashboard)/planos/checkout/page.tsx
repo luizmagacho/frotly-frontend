@@ -24,6 +24,17 @@ export default function CheckoutPage() {
   
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isUpgrade, setIsUpgrade] = useState(false);
+
+  useEffect(() => {
+    api
+      .get<any>('/billing/trial/status')
+      .then((res) => {
+        const status = res?.subscriptionStatus || res?.data?.subscriptionStatus;
+        setIsUpgrade(['trialing', 'active'].includes(status));
+      })
+      .catch(() => setIsUpgrade(false));
+  }, []);
 
   useEffect(() => {
     if (!plan) {
@@ -37,7 +48,7 @@ export default function CheckoutPage() {
           plan,
           interval,
         });
-        
+
         // Agora o backend retorna clientSecret em vez de url
         if (response?.clientSecret || response?.data?.clientSecret) {
           setClientSecret(response.clientSecret || response.data.clientSecret);
@@ -45,8 +56,9 @@ export default function CheckoutPage() {
           setError('Erro ao carregar sessão de pagamento segura.');
         }
       } catch (err: any) {
+        const msg = err.response?.data?.message;
         console.error(err);
-        setError(err.message || 'Falha de comunicação com o servidor de pagamentos.');
+        setError(Array.isArray(msg) ? msg[0] : (msg || err.message || 'Falha de comunicação com o servidor de pagamentos.'));
       }
     };
 
@@ -63,9 +75,16 @@ export default function CheckoutPage() {
           <ArrowLeft className="h-5 w-5 text-slate-500 dark:text-slate-400" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Assinar Plano {planLabel}</h1>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+            {isUpgrade ? `Fazer Upgrade para o Plano ${planLabel}` : `Assinar Plano ${planLabel}`}
+          </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400">
-            Ciclo de faturamento: {intervalLabel}. <strong className="text-emerald-600 dark:text-emerald-400">Teste grátis de 7 dias</strong> incluso!
+            Ciclo de faturamento: {intervalLabel}.{' '}
+            {isUpgrade ? (
+              'A cobrança do novo valor começa imediatamente.'
+            ) : (
+              <><strong className="text-emerald-600 dark:text-emerald-400">Teste grátis de 7 dias</strong> incluso!</>
+            )}
           </p>
         </div>
       </div>
