@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api-client';
@@ -12,9 +12,15 @@ export default function PlanosPage() {
   const { data: session } = useSession();
   const [isAnnual, setIsAnnual] = useState(false);
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
-  
-  // O usuário está logado, a API já tem o tenantId dele pelo JWT do backend.
-  const currentPlan = (session?.user as any)?.tenant?.plan || 'BASIC'; 
+  const [currentPlan, setCurrentPlan] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!session) return;
+    api
+      .get<any>('/billing/trial/status')
+      .then((res) => setCurrentPlan(res?.plan || res?.data?.plan || null))
+      .catch(() => setCurrentPlan(null));
+  }, [session]);
 
   const plans = [
     {

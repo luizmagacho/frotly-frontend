@@ -8,7 +8,7 @@ import { useTheme } from 'next-themes';
 import { api } from '@/lib/api-client';
 import {
   LayoutDashboard, Car, Users, FileText, Wrench, AlertTriangle,
-  Receipt, Shield, Fuel, Bell, Settings, Menu, X, Search,
+  Receipt, Shield, Fuel, Bell, Settings, Menu, X,
   LogOut, Gauge, FileCheck, DollarSign, Sun, Moon,
   ClipboardCheck, Building2, CalendarCheck, CreditCard,
 } from 'lucide-react';
@@ -220,15 +220,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           >
             <Menu className="h-5 w-5" />
           </button>
-
-          <div className="hidden max-w-[360px] flex-1 items-center gap-2.5 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-800 dark:bg-slate-900 md:flex">
-            <Search className="h-[15px] w-[15px] shrink-0 text-slate-400 dark:text-slate-500" />
-            <input
-              type="text"
-              placeholder="Pesquisar veículos, motoristas..."
-              className="w-full bg-transparent text-[13px] text-slate-700 placeholder:text-slate-400 outline-none dark:text-slate-200 dark:placeholder:text-slate-500"
-            />
-          </div>
 
           <div className="ml-auto flex items-center gap-1.5">
             <div className="mr-1 hidden items-center gap-2 sm:flex">
