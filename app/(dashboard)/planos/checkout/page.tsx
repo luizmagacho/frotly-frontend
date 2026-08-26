@@ -12,7 +12,7 @@ import Link from 'next/link';
 // Stripe.js já carrega fixado na versão "dahlia" por padrão; passar apiVersion
 // manualmente aqui derruba o Stripe() com VersionError em tempo de execução.
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_51HQFk3AV2SviZXwdSYf6kAsxtY1msfV90CSO3HHvR9lh1bDvSEiQOxUuhFoVf78ncwe8LW7O127JgNvRpHWooGyh00a6isnU8L'
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_51U8OzB2O4zjXRvLvuXuBXFyXlT3EgfgpbnrzSy62icWeurM7llfSwKT0rZKbfmnWDrGP0vSAP6MsHJamWisXz0OJ00Ia9leKOK'
 );
 
 export default function CheckoutPage() {

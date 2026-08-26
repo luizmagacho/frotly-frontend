@@ -2,17 +2,19 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { loadStripe } from '@stripe/stripe-js';
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react';
 import Link from 'next/link';
+import { api } from '@/lib/api-client';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_test_51U8OzB2O4zjXRvLvuXuBXFyXlT3EgfgpbnrzSy62icWeurM7llfSwKT0rZKbfmnWDrGP0vSAP6MsHJamWisXz0OJ00Ia9leKOK');
+const ACTIVE_STATUSES = ['trialing', 'active'];
+const POLL_ATTEMPTS = 6;
+const POLL_INTERVAL_MS = 1500;
 
 export default function CheckoutReturnPage() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
   const router = useRouter();
-  
+
   const [status, setStatus] = useState<'loading' | 'success' | 'open'>('loading');
 
   useEffect(() => {
@@ -21,31 +23,37 @@ export default function CheckoutReturnPage() {
       return;
     }
 
+    let cancelled = false;
+
     const checkStatus = async () => {
-      try {
-        const stripe = await stripePromise;
-        if (!stripe) throw new Error('Stripe failed to load');
-
-        const { session } = await (stripe as any).retrieveCheckoutSession(sessionId);
-
-        if (session && session.status === 'complete') {
-          setStatus('success');
-        } else {
-          setStatus('open');
+      // O webhook do Stripe atualiza a assinatura no backend de forma assíncrona,
+      // então tentamos algumas vezes antes de considerar como pendente.
+      for (let attempt = 0; attempt < POLL_ATTEMPTS; attempt++) {
+        try {
+          const response = await api.get<any>('/billing/trial/status');
+          const subscriptionStatus = response?.subscriptionStatus || response?.data?.subscriptionStatus;
+          if (ACTIVE_STATUSES.includes(subscriptionStatus)) {
+            if (!cancelled) setStatus('success');
+            return;
+          }
+        } catch (err) {
+          console.error('Erro ao verificar status da assinatura:', err);
         }
-      } catch (err) {
-        console.error('Error retrieving session:', err);
-        setStatus('open');
+        if (!cancelled) await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
       }
+      if (!cancelled) setStatus('open');
     };
 
     checkStatus();
+    return () => {
+      cancelled = true;
+    };
   }, [sessionId, router]);
 
   return (
     <div className="mx-auto max-w-2xl pt-16 pb-10">
       <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        
+
         {status === 'loading' && (
           <div className="flex flex-col items-center justify-center space-y-4">
             <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
