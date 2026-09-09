@@ -58,6 +58,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [planName, setPlanName] = useState<string | null>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (!session) return;
+    api
+      .get<any>('/notifications/unread-count')
+      .then((res) => setUnreadCount(res?.data ?? res ?? 0))
+      .catch(() => setUnreadCount(0));
+  }, [session, pathname]);
 
   useEffect(() => {
     if (!session) return;
@@ -250,6 +259,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               className="relative rounded-lg p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
               <Bell className="h-5 w-5" />
+              {unreadCount > 0 && (
+                <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" />
+              )}
             </Link>
           </div>
         </header>
