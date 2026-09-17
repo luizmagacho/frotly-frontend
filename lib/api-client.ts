@@ -6,6 +6,7 @@ interface ApiClientOptions extends RequestInit {
 
 class ApiClient {
   private baseUrl: string;
+  private sessionExpiredPromise: Promise<boolean> | null = null;
 
   constructor() {
     let url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
@@ -52,17 +53,18 @@ class ApiClient {
     });
 
     if (response.status === 401) {
-      const refreshed = await this.refreshToken();
+      // Várias chamadas em paralelo (ex: layout + página) podem receber 401 ao
+      // mesmo tempo quando o token expira. Sem essa fila compartilhada, cada uma
+      // tentava renovar/deslogar de forma independente, disparando múltiplos
+      // signOut()/redirecionamentos simultâneos — a causa do "piscar" da tela.
+      if (!this.sessionExpiredPromise) {
+        this.sessionExpiredPromise = this.handleUnauthorized().finally(() => {
+          this.sessionExpiredPromise = null;
+        });
+      }
+      const refreshed = await this.sessionExpiredPromise;
       if (refreshed) {
         return this.fetch<T>(endpoint, options);
-      }
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        // Importante: Limpar a sessão do NextAuth (cookie) antes de ir para o login
-        const { signOut } = await import('next-auth/react');
-        await signOut({ redirect: true, callbackUrl: '/login' });
-        return null as any;
       }
       throw new Error('Sessão expirada');
     }
@@ -98,6 +100,20 @@ class ApiClient {
 
     const text = await response.text();
     return text ? (JSON.parse(text) as T) : (null as any);
+  }
+
+  private async handleUnauthorized(): Promise<boolean> {
+    const refreshed = await this.refreshToken();
+    if (refreshed) return true;
+
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      // Importante: Limpar a sessão do NextAuth (cookie) antes de ir para o login
+      const { signOut } = await import('next-auth/react');
+      await signOut({ redirect: true, callbackUrl: '/login' });
+    }
+    return false;
   }
 
   private async refreshToken(): Promise<boolean> {
