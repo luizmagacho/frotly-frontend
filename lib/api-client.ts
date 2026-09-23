@@ -7,6 +7,7 @@ interface ApiClientOptions extends RequestInit {
 class ApiClient {
   private baseUrl: string;
   private sessionExpiredPromise: Promise<boolean> | null = null;
+  private loggedOut = false;
 
   constructor() {
     let url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
@@ -53,17 +54,20 @@ class ApiClient {
     });
 
     if (response.status === 401) {
-      // Várias chamadas em paralelo (ex: layout + página) podem receber 401 ao
-      // mesmo tempo quando o token expira. Sem essa fila compartilhada, cada uma
-      // tentava renovar/deslogar de forma independente, disparando múltiplos
-      // signOut()/redirecionamentos simultâneos — a causa do "piscar" da tela.
+      // Várias chamadas à API (layout + página) podem receber 401 quando o token
+      // expira, cada uma em um momento ligeiramente diferente — não só na mesma
+      // tick. Uma vez que já decidimos deslogar, esse "loggedOut" trava qualquer
+      // 401 futuro nesta aba para não disparar signOut()/redirecionamento de novo
+      // (era isso que causava a tela "piscando"/recarregando repetidamente).
+      if (this.loggedOut) {
+        throw new Error('Sessão expirada');
+      }
       if (!this.sessionExpiredPromise) {
-        this.sessionExpiredPromise = this.handleUnauthorized().finally(() => {
-          this.sessionExpiredPromise = null;
-        });
+        this.sessionExpiredPromise = this.handleUnauthorized();
       }
       const refreshed = await this.sessionExpiredPromise;
       if (refreshed) {
+        this.sessionExpiredPromise = null;
         return this.fetch<T>(endpoint, options);
       }
       throw new Error('Sessão expirada');
@@ -106,6 +110,7 @@ class ApiClient {
     const refreshed = await this.refreshToken();
     if (refreshed) return true;
 
+    this.loggedOut = true;
     if (typeof window !== 'undefined') {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
