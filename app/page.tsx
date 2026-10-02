@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { LandingHeader } from './components/landing-header';
 
 const shotStats = [
   { label: 'Veículos', value: '50' },
@@ -87,33 +88,7 @@ export default function Home() {
     <div className="min-h-screen bg-white text-slate-900">
 
       {/* NAV */}
-      <header className="border-b border-slate-100">
-        <div className="mx-auto flex h-16 max-w-6xl items-center gap-8 px-6">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="h-8 w-8 overflow-hidden rounded-lg shadow-md shadow-blue-500/20">
-              <img src="/logo.jpg?v=2" alt="Frotly" className="h-full w-full object-cover" />
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className="text-[15px] font-bold tracking-tight text-slate-900">Frotly</span>
-              <span className="text-[10.5px] font-semibold uppercase tracking-wider text-slate-400">Fleet OS</span>
-            </div>
-          </Link>
-          <nav className="flex gap-6">
-            <a href="#produto" className="text-[13px] font-medium text-slate-600 hover:text-slate-900">Produto</a>
-            <a href="#planos" className="text-[13px] font-medium text-slate-600 hover:text-slate-900">Planos</a>
-            <a href="#locadoras" className="text-[13px] font-medium text-slate-600 hover:text-slate-900">Para locadoras</a>
-          </nav>
-          <div className="ml-auto flex items-center gap-3.5">
-            <Link href="/login" className="text-[13px] font-medium text-slate-900">Entrar</Link>
-            <Link
-              href="/registro"
-              className="rounded-lg bg-blue-600 px-4.5 py-2.5 text-[13px] font-semibold text-white shadow-lg shadow-blue-600/30 hover:bg-blue-700"
-            >
-              Teste grátis de 7 dias
-            </Link>
-          </div>
-        </div>
-      </header>
+      <LandingHeader />
 
       {/* HERO */}
       <section className="mx-auto max-w-5xl px-6 pb-16 pt-20 text-center md:pt-24">
