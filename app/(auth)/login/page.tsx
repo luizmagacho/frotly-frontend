@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { signIn, signOut } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
@@ -15,20 +15,12 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const cleanSession = async () => {
-      if (typeof window !== 'undefined') {
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-          try {
-            await signOut({ redirect: false });
-          } catch (e) {}
-        } else {
-          router.push('/dashboard');
-        }
-      }
-    };
-    cleanSession();
-  }, [router]);
+    // O middleware já manda quem tem sessão válida direto para /dashboard. Se esta
+    // tela renderizou, não há sessão: qualquer token no localStorage é resto de uma
+    // sessão expirada. Redirecionar por causa dele gerava loop /login <-> /dashboard.
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
