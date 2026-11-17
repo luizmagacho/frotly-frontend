@@ -5,6 +5,7 @@ import { ThemeProvider } from 'next-themes';
 import { SessionProvider } from 'next-auth/react';
 import { useState } from 'react';
 import { Toaster } from 'sonner';
+import { CrispIdentity } from '@/app/components/crisp-identity';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -25,6 +26,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
+          <CrispIdentity />
           <Toaster position="top-right" richColors />
         </ThemeProvider>
       </QueryClientProvider>

@@ -31,8 +31,9 @@ describe('IpvaPage', () => {
   it('renders without crashing when API returns undefined or empty arrays (Regression for .filter bug)', async () => {
     // Simulate the API returning empty arrays or undefined
     (api.get as jest.Mock).mockImplementation((url: string) => {
-      if (url === '/ipva') return Promise.resolve({ data: [] });
-      if (url === '/vehicles') return Promise.resolve({ data: { data: [{ _id: '123', licensePlate: 'ABC1234' }] } });
+      // Formatos reais da API: /ipva devolve a lista direto; /vehicles é paginado { data, total }.
+      if (url === '/ipva') return Promise.resolve([]);
+      if (url === '/vehicles') return Promise.resolve({ data: [{ _id: '123', licensePlate: 'ABC1234' }], total: 1 });
       return Promise.resolve({ data: [] });
     });
 

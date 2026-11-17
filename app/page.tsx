@@ -51,21 +51,21 @@ const plans = [
     price: '149',
     desc: 'Locadoras começando',
     highlight: false,
-    features: ['Até 20 veículos', 'Contratos digitais', 'Financeiro básico', 'Suporte por chat'],
+    features: ['Até 20 veículos', 'Contratos, reservas e cobranças', 'Multas com repasse ao motorista', 'Vistorias, manutenção e IPVA', 'Alertas por e-mail', 'Suporte por chat'],
   },
   {
     name: 'Pro',
     price: '349',
     desc: 'Locadoras em crescimento',
     highlight: true,
-    features: ['Até 100 veículos', 'Multas + Detran', 'IA preditiva', 'Suporte prioritário'],
+    features: ['Até 100 veículos', 'Tudo do Starter', 'Lembretes por WhatsApp', 'Suporte prioritário'],
   },
   {
     name: 'Enterprise',
     price: '649',
     desc: 'Grandes frotas e redes',
     highlight: false,
-    features: ['Veículos ilimitados', 'Multi-unidades', 'Gerente de conta', 'Integração ERP'],
+    features: ['Veículos ilimitados', 'Tudo do Pro', 'Consulta Detran-PR integrada', 'Gerente de conta dedicado'],
   },
 ];
 

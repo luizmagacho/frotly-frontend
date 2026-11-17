@@ -70,7 +70,7 @@ export default function CheckoutPage() {
   }, [plan, interval, router]);
 
   const intervalLabel = interval === 'annual' ? 'Anual' : 'Mensal';
-  const planLabel = plan === 'BASIC' ? 'Básico' : plan === 'PRO' ? 'Profissional' : 'Empresarial';
+  const planLabel = plan === 'BASIC' ? 'Starter' : plan === 'PRO' ? 'Pro' : 'Enterprise';
 
   return (
     <div className="mx-auto max-w-4xl space-y-6 pb-10">

@@ -71,7 +71,7 @@ export default function MaintenancePage() {
                   <td className="px-4 py-3 text-sm font-medium text-slate-900 dark:text-white">{m.vehicleId?.licensePlate || '-'}</td>
                   <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400">{typeLabels[m.type] || m.type}</td>
                   <td className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 max-w-xs truncate">{m.description}</td>
-                  <td className="px-4 py-3 text-sm font-medium text-slate-900 dark:text-white">{formatCurrency(m.totalCost || 0)}</td>
+                  <td className="px-4 py-3 text-sm font-medium text-slate-900 dark:text-white">{formatCurrency(m.cost ?? m.totalCost ?? 0)}</td>
                   <td className="px-4 py-3"><span className={`rounded-full px-2 py-0.5 text-xs font-medium ${statusColors[m.status] || ''}`}>{statusLabels[m.status] || m.status}</span></td>
                   <td className="px-4 py-3 text-right">
                     <Link href={`/manutencoes/${m._id}`} className="rounded p-1 text-slate-400 hover:text-slate-600"><Eye className="h-4 w-4" /></Link>

@@ -30,8 +30,10 @@ export default function IpvaPage() {
         api.get<any>('/ipva'),
         api.get<any>('/vehicles')
       ]);
-      setIpvas(ipvaRes.data);
-      setVehicles(vehiclesRes.data);
+      // /ipva devolve a lista direto; /vehicles devolve { data, total, ... }. Aceita os dois formatos.
+      const listOf = (res: any) => (Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : []);
+      setIpvas(listOf(ipvaRes));
+      setVehicles(listOf(vehiclesRes));
     } catch (error) {
       toast.error('Erro ao carregar dados de IPVA');
       console.error(error);
