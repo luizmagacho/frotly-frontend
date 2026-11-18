@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { api } from '@/lib/api-client';
+import { CrispLeadForm, identifyLead, readLead } from './crisp-lead-form';
 
 /**
  * Marca cada conversa do chat (Crisp) com a origem do contato, para que quem
@@ -29,6 +30,21 @@ export function CrispIdentity() {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const identifiedFor = useRef<string | null>(null);
+  // Visitante (não logado) que ainda não deu nome/telefone: mostra o nosso formulário no lugar do botão da Crisp.
+  const hasStoredLead = useSyncExternalStore(
+    () => () => {},
+    () => readLead() !== null,
+    () => true, // no servidor não há localStorage: não renderiza o formulário
+  );
+  const [leadSent, setLeadSent] = useState(false);
+  const needsLead = status === 'unauthenticated' && !hasStoredLead && !leadSent;
+
+  useEffect(() => {
+    if (status === 'loading') return;
+    const lead = status === 'unauthenticated' ? readLead() : null;
+    if (lead) identifyLead(lead);
+    crisp('do', status === 'unauthenticated' && !lead ? 'chat:hide' : 'chat:show');
+  }, [status]);
 
   // Origem fixa do produto + página atual (atualizada a cada navegação).
   useEffect(() => {
@@ -71,5 +87,5 @@ export function CrispIdentity() {
     });
   }, [session, status]);
 
-  return null;
+  return needsLead ? <CrispLeadForm onDone={() => setLeadSent(true)} /> : null;
 }
