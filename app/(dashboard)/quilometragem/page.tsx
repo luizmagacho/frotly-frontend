@@ -2,6 +2,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api-client';
 import { Gauge } from 'lucide-react';
+import { MileageReport } from './mileage-report';
 
 export default function MileagePage() {
   const { data, isLoading } = useQuery({ queryKey: ['mileage'], queryFn: () => api.get<any>('/mileage', { limit: 100 }) });
@@ -11,8 +12,12 @@ export default function MileagePage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Quilometragem</h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">Registros de quilometragem por veículo</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Rodagem da frota e registros de km por veículo</p>
       </div>
+
+      <MileageReport />
+
+      <h2 className="pt-2 text-lg font-semibold text-slate-900 dark:text-white">Leituras registradas</h2>
 
       {isLoading ? (
         <div className="h-48 animate-pulse rounded-xl bg-slate-200 dark:bg-slate-800" />

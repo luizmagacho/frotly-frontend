@@ -58,14 +58,14 @@ const plans = [
     price: '349',
     desc: 'Locadoras em crescimento',
     highlight: true,
-    features: ['Até 100 veículos', 'Tudo do Starter', 'Lembretes por WhatsApp', 'Suporte prioritário'],
+    features: ['Até 100 veículos', 'Tudo do Starter', 'Rodagem e custo por km por veículo', 'Suporte prioritário'],
   },
   {
     name: 'Enterprise',
     price: '649',
     desc: 'Grandes frotas e redes',
     highlight: false,
-    features: ['Veículos ilimitados', 'Tudo do Pro', 'Consulta Detran-PR integrada', 'Gerente de conta dedicado'],
+    features: ['Veículos ilimitados', 'Tudo do Pro', 'Lembretes por WhatsApp', 'Consulta Detran-PR integrada', 'Gerente de conta dedicado'],
   },
 ];
 

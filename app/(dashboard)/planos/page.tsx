@@ -51,7 +51,7 @@ export default function PlanosPage() {
       features: [
         'Até 100 veículos',
         'Tudo do Starter',
-        'Lembretes por WhatsApp para motoristas (vencimento, atraso, CNH e km)',
+        'Rodagem e custo por km de cada veículo (km rodado, custo e receita por km)',
         'Suporte prioritário',
       ],
       highlight: true,
@@ -66,6 +66,7 @@ export default function PlanosPage() {
       features: [
         'Veículos ilimitados',
         'Tudo do Pro',
+        'Lembretes por WhatsApp para motoristas (vencimento, atraso, CNH e km)',
         'Consulta integrada ao Detran-PR (IPVA, licenciamento e multas)',
         'Gerente de conta dedicado',
       ],
