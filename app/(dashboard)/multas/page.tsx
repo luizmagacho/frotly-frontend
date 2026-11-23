@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { AlertTriangle, CheckCircle2, Clock, Gavel, HandCoins, Plus, Search, Trash2, User } from 'lucide-react';
 import { api } from '@/lib/api-client';
 import { formatCurrency, formatDate } from '@/lib/shared-utils';
+import { DetranPanel } from './detran-panel';
 
 const FILTERS = [
   { value: '', label: 'Todas' },
@@ -97,6 +98,8 @@ export default function FinesPage() {
         </Link>
       </div>
 
+      <DetranPanel />
+
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {cards.map(({ label, icon: Icon, tone, d }) => (
           <div key={label} className="rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
@@ -181,6 +184,11 @@ export default function FinesPage() {
                         <div className="truncate text-sm font-medium text-slate-900 dark:text-white" title={f.description}>{f.description}</div>
                         <div className="text-xs text-slate-500 dark:text-slate-400">
                           AIT {f.noticeNumber} · {formatDate(f.infractionDate)}{f.issuingAgency ? ` · ${f.issuingAgency}` : ''}
+                          {f.source?.startsWith('DETRAN_') && (
+                            <span className="ml-2 rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+                              Detran
+                            </span>
+                          )}
                         </div>
                       </td>
                       <td className="px-4 py-3 text-sm">

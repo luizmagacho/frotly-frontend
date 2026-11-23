@@ -8,13 +8,15 @@ import { toast } from 'sonner';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
+const UFS = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
+
 export default function EditVehiclePage() {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
 
   const [form, setForm] = useState({
-    plate: '', renavam: '', chassis: '', brand: '', model: '',
+    plate: '', renavam: '', uf: '', ownerDocument: '', chassis: '', brand: '', model: '',
     year: new Date().getFullYear(), modelYear: new Date().getFullYear(),
     color: '', fuelType: 'FLEX', transmission: 'AUTOMATICO', seats: 5,
     purchasePrice: 0, notes: '', mileage: 0,
@@ -31,6 +33,8 @@ export default function EditVehiclePage() {
       setForm({
         plate: v.plate || v.licensePlate || '',
         renavam: v.renavam || '',
+        uf: v.uf || '',
+        ownerDocument: v.ownerDocument || '',
         chassis: v.chassis || '',
         brand: v.brand || '',
         model: v.model || '',
@@ -131,6 +135,19 @@ export default function EditVehiclePage() {
           <div>
             <label className={labelClass}>RENAVAM *</label>
             <input className={inputClass} value={form.renavam} onChange={handleRenavamChange} placeholder="11 dígitos" required />
+          </div>
+          <div>
+            <label className={labelClass}>UF de emplacamento</label>
+            <select className={inputClass} value={form.uf} onChange={(e) => setForm({ ...form, uf: e.target.value })}>
+              <option value="">Selecione</option>
+              {UFS.map((uf) => <option key={uf} value={uf}>{uf}</option>)}
+            </select>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Define em qual Detran consultar multas, licenciamento e IPVA.</p>
+          </div>
+          <div>
+            <label className={labelClass}>CPF/CNPJ do proprietário no Detran</label>
+            <input className={inputClass} value={form.ownerDocument} onChange={(e) => setForm({ ...form, ownerDocument: e.target.value.replace(/\D/g, '').slice(0, 14) })} placeholder="Vazio = CNPJ da locadora" inputMode="numeric" />
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Preencha só se o carro não estiver no CNPJ da locadora.</p>
           </div>
           <div className="md:col-span-2">
             <label className={labelClass}>Chassi *</label>
