@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { Lock, Route, Gauge, TrendingDown, TrendingUp } from 'lucide-react';
+import { Lock, Route, Gauge, TrendingDown, AlertTriangle } from 'lucide-react';
 import { api } from '@/lib/api-client';
 import { formatCurrency } from '@/lib/utils';
 
@@ -13,6 +13,12 @@ type Row = {
   name: string;
   kmInPeriod: number;
   kmPerDay: number;
+  kmPerWeek: number;
+  weeklyKmLimit: number | null;
+  overLimit: boolean;
+  excessKm: number;
+  excessKmValue: number | null;
+  driverName: string | null;
   readingsInPeriod: number;
   lastReadingAt: string | null;
   income: number;
@@ -27,6 +33,10 @@ type Report = {
   totals: {
     kmInPeriod: number;
     kmPerDay: number;
+    kmPerWeekPerVehicle: number;
+    vehiclesOverLimit: number;
+    excessKm: number;
+    excessKmValue: number;
     costPerKm: number | null;
     revenuePerKm: number | null;
     vehiclesWithoutReadings: number;
@@ -73,9 +83,14 @@ export function MileageReport() {
 
   const cards = [
     { label: `Km rodados (${days} dias)`, value: t ? km(t.kmInPeriod) : '—', icon: Route },
-    { label: 'Média da frota por dia', value: t ? km(t.kmPerDay) : '—', icon: Gauge },
-    { label: 'Custo por km', value: perKm(t?.costPerKm ?? null), icon: TrendingDown },
-    { label: 'Receita por km', value: perKm(t?.revenuePerKm ?? null), icon: TrendingUp },
+    { label: 'Média por carro/semana', value: t ? km(t.kmPerWeekPerVehicle) : '—', icon: Gauge },
+    { label: 'Custo por km (sem combustível)', value: perKm(t?.costPerKm ?? null), icon: TrendingDown },
+    {
+      label: 'Km acima do limite semanal',
+      value: t ? km(t.excessKm) : '—',
+      sub: t && t.excessKm > 0 ? `${t.vehiclesOverLimit} carro(s) com média acima do limite · ${formatCurrency(t.excessKmValue)} a cobrar` : undefined,
+      icon: AlertTriangle,
+    },
   ];
 
   return (
@@ -87,7 +102,7 @@ export function MileageReport() {
             <span className="rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-950/40 dark:text-red-300">Pro</span>
           </div>
           <p className="text-sm text-slate-500 dark:text-slate-400">
-            Km rodado por veículo e quanto cada km custou e rendeu, a partir das leituras de km e do financeiro.
+            Km rodado por veículo (reporte semanal do motorista e leituras de km), limite semanal do contrato e quanto cada km custou e rendeu.
           </p>
         </div>
         <div className="flex rounded-lg border border-slate-200 p-0.5 dark:border-slate-700" role="group" aria-label="Período">
@@ -117,6 +132,7 @@ export function MileageReport() {
               {c.label}
             </div>
             <div className="mt-2 text-xl font-bold text-slate-900 dark:text-white">{isLoading ? '…' : c.value}</div>
+            {'sub' in c && c.sub && <div className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{c.sub}</div>}
           </div>
         ))}
       </div>
@@ -131,12 +147,13 @@ export function MileageReport() {
         </p>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <table className="w-full min-w-[720px]">
+          <table className="w-full min-w-[880px]">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs font-medium uppercase text-slate-500 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-400">
                 <th className="px-4 py-3">Veículo</th>
                 <th className="px-4 py-3 text-right">Km no período</th>
-                <th className="px-4 py-3 text-right">Km/dia</th>
+                <th className="px-4 py-3 text-right">Km/semana</th>
+                <th className="px-4 py-3 text-right">Excedente</th>
                 <th className="px-4 py-3 text-right">Custo/km</th>
                 <th className="px-4 py-3 text-right">Receita/km</th>
                 <th className="px-4 py-3 text-right">Margem/km</th>
@@ -147,11 +164,28 @@ export function MileageReport() {
               {rows.map((r) => (
                 <tr key={r.vehicleId}>
                   <td className="px-4 py-3">
-                    <div className="font-medium text-slate-900 dark:text-white">{r.licensePlate}</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400">{r.name}</div>
+                    <Link href={`/veiculos/${r.vehicleId}#plano-de-venda`} className="font-medium text-slate-900 hover:text-red-600 hover:underline dark:text-white" title="Ver plano de venda">
+                      {r.licensePlate}
+                    </Link>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">{r.name}{r.driverName ? ` · ${r.driverName}` : ''}</div>
                   </td>
                   <td className="px-4 py-3 text-right font-medium text-slate-900 dark:text-white">{km(r.kmInPeriod)}</td>
-                  <td className="px-4 py-3 text-right text-slate-700 dark:text-slate-300">{Math.round(r.kmPerDay).toLocaleString('pt-BR')}</td>
+                  <td className="px-4 py-3 text-right">
+                    <div className={r.overLimit ? 'font-medium text-red-600 dark:text-red-400' : 'text-slate-700 dark:text-slate-300'}>
+                      {Math.round(r.kmPerWeek).toLocaleString('pt-BR')}
+                    </div>
+                    <div className="text-xs text-slate-400">{r.weeklyKmLimit ? `limite ${r.weeklyKmLimit.toLocaleString('pt-BR')}` : 'sem limite'}</div>
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-3 text-right">
+                    {r.excessKm > 0 ? (
+                      <>
+                        <div className="font-medium text-red-600 dark:text-red-400">{km(r.excessKm)}</div>
+                        {r.excessKmValue != null && <div className="text-xs text-slate-500 dark:text-slate-400">{formatCurrency(r.excessKmValue)}</div>}
+                      </>
+                    ) : (
+                      <span className="text-slate-400">—</span>
+                    )}
+                  </td>
                   <td className="px-4 py-3 text-right text-slate-700 dark:text-slate-300">{perKm(r.costPerKm)}</td>
                   <td className="px-4 py-3 text-right text-slate-700 dark:text-slate-300">{perKm(r.revenuePerKm)}</td>
                   <td

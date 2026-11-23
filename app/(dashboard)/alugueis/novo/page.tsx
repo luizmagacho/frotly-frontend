@@ -12,7 +12,7 @@ export default function NewRentalPage() {
   const router = useRouter();
   const [form, setForm] = useState({
     vehicleId: '', driverId: '', startDate: '', expectedEndDate: '',
-    rentalAmount: '', paymentFrequency: 'WEEKLY', securityDeposit: '', notes: ''
+    rentalAmount: '', paymentFrequency: 'WEEKLY', securityDeposit: '', weeklyKmLimit: '', excessKmFee: '', notes: ''
   });
 
   const { data: vehiclesData } = useQuery({
@@ -50,6 +50,8 @@ export default function NewRentalPage() {
       ...form,
       rentalAmount: Number(form.rentalAmount),
       securityDeposit: form.securityDeposit ? Number(form.securityDeposit) : 0,
+      weeklyKmLimit: form.weeklyKmLimit !== '' ? Number(form.weeklyKmLimit) : undefined,
+      excessKmFee: form.excessKmFee !== '' ? Number(form.excessKmFee.replace(',', '.')) : undefined,
       startDate: new Date(form.startDate).toISOString(),
       expectedEndDate: form.expectedEndDate ? new Date(form.expectedEndDate).toISOString() : undefined,
     });
@@ -122,6 +124,14 @@ export default function NewRentalPage() {
           <div>
             <label className={labelClass}>Valor da Caução (R$)</label>
             <input type="number" step="0.01" className={inputClass} value={form.securityDeposit} onChange={(e) => setForm({ ...form, securityDeposit: e.target.value })} placeholder="Opcional" />
+          </div>
+          <div>
+            <label className={labelClass}>Limite de km por semana</label>
+            <input type="number" min="0" step="1" className={inputClass} value={form.weeklyKmLimit} onChange={(e) => setForm({ ...form, weeklyKmLimit: e.target.value })} placeholder="Ex.: 1500 (vazio = sem limite)" />
+          </div>
+          <div>
+            <label className={labelClass}>Valor por km excedente (R$)</label>
+            <input type="number" min="0" step="0.01" className={inputClass} value={form.excessKmFee} onChange={(e) => setForm({ ...form, excessKmFee: e.target.value })} placeholder="Ex.: 0,50" />
           </div>
         </div>
 

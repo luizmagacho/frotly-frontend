@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Edit, Car, Wallet } from 'lucide-react';
 import { formatCurrency } from '@/lib/shared-utils';
+import { SalePlan } from './sale-plan';
 
 const statusLabels: Record<string, string> = {
   AVAILABLE: 'Disponível',
@@ -81,6 +82,8 @@ export default function VehicleDetailPage() {
           </Link>
         </div>
       </div>
+
+      <SalePlan vehicleId={id} />
     </div>
   );
 }

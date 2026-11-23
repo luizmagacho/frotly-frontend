@@ -109,7 +109,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
   });
 
   const recordMileageMutation = useMutation({
-    mutationFn: (mileage: number) => api.put(`/rentals/${rentalId}/mileage`, {
+    mutationFn: (mileage: number) => api.post(`/rentals/${rentalId}/mileage`, {
       newMileage: mileage,
       date: new Date().toISOString(),
     }),
@@ -293,6 +293,30 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
                     : `${rental.vehicleId?.mileage || 0} km`}
                 </span>
               </p>
+              {(() => {
+                const last = rental.mileageLogs?.[rental.mileageLogs.length - 1];
+                const limit = rental.weeklyKmLimit;
+                const over = limit && last && last.kmDriven > limit;
+                return (
+                  <>
+                    <p className="flex justify-between border-t border-slate-100 pt-2 dark:border-slate-800">
+                      <span className="text-slate-500 dark:text-slate-400">Limite por semana:</span>
+                      <span className="font-medium text-slate-900 dark:text-white">
+                        {limit ? `${Number(limit).toLocaleString('pt-BR')} km` : 'Sem limite'}
+                      </span>
+                    </p>
+                    {last && (
+                      <p className="flex justify-between pb-1">
+                        <span className="text-slate-500 dark:text-slate-400">Último reporte:</span>
+                        <span className={`font-medium ${over ? 'text-red-600 dark:text-red-400' : 'text-slate-900 dark:text-white'}`}>
+                          {Number(last.kmDriven).toLocaleString('pt-BR')} km em {new Date(last.date).toLocaleDateString('pt-BR')}
+                          {over ? ` (+${(last.kmDriven - limit).toLocaleString('pt-BR')} km${rental.excessKmFee ? ` · ${formatCurrency((last.kmDriven - limit) * rental.excessKmFee)}` : ''})` : ''}
+                        </span>
+                      </p>
+                    )}
+                  </>
+                );
+              })()}
               
               {isUpdatingMileage ? (
                 <div className="mt-2 flex items-center gap-2">
@@ -317,7 +341,7 @@ export default function RentalDetailsPage({ params }: { params: Promise<{ id: st
                     Cancelar
                   </button>
                 </div>
-              ) : rental.status === 'ATIVO' && (
+              ) : ['ACTIVE', 'OVERDUE'].includes(rental.status) && (
                 <button
                   onClick={() => setIsUpdatingMileage(true)}
                   className="mt-2 w-full rounded-md border border-slate-200 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"

@@ -15,7 +15,7 @@ export default function EditRentalPage({ params }: { params: Promise<{ id: strin
   
   const [form, setForm] = useState({
     startDate: '', expectedEndDate: '',
-    rentalAmount: '', paymentFrequency: 'WEEKLY', securityDeposit: '', notes: ''
+    rentalAmount: '', paymentFrequency: 'WEEKLY', securityDeposit: '', weeklyKmLimit: '', excessKmFee: '', notes: ''
   });
 
   const { data: rentalData, isLoading } = useQuery({
@@ -32,6 +32,8 @@ export default function EditRentalPage({ params }: { params: Promise<{ id: strin
         rentalAmount: rental.rentalAmount?.toString() || '',
         paymentFrequency: rental.paymentFrequency || 'WEEKLY',
         securityDeposit: rental.securityDeposit?.toString() || '',
+        weeklyKmLimit: rental.weeklyKmLimit?.toString() || '',
+        excessKmFee: rental.excessKmFee?.toString() || '',
         notes: rental.notes || ''
       });
     }
@@ -59,6 +61,8 @@ export default function EditRentalPage({ params }: { params: Promise<{ id: strin
     mutation.mutate({
       rentalAmount: Number(form.rentalAmount),
       securityDeposit: form.securityDeposit ? Number(form.securityDeposit) : 0,
+      weeklyKmLimit: form.weeklyKmLimit !== '' ? Number(form.weeklyKmLimit) : undefined,
+      excessKmFee: form.excessKmFee !== '' ? Number(form.excessKmFee.replace(',', '.')) : undefined,
       paymentFrequency: form.paymentFrequency,
       startDate: new Date(form.startDate).toISOString(),
       expectedEndDate: form.expectedEndDate ? new Date(form.expectedEndDate).toISOString() : undefined,
@@ -131,6 +135,14 @@ export default function EditRentalPage({ params }: { params: Promise<{ id: strin
           <div>
             <label className={labelClass}>Valor da Caução (R$)</label>
             <input type="number" step="0.01" className={inputClass} value={form.securityDeposit} onChange={(e) => setForm({ ...form, securityDeposit: e.target.value })} placeholder="Opcional" />
+          </div>
+          <div>
+            <label className={labelClass}>Limite de km por semana</label>
+            <input type="number" min="0" step="1" className={inputClass} value={form.weeklyKmLimit} onChange={(e) => setForm({ ...form, weeklyKmLimit: e.target.value })} placeholder="Ex.: 1500 (vazio = sem limite)" />
+          </div>
+          <div>
+            <label className={labelClass}>Valor por km excedente (R$)</label>
+            <input type="number" min="0" step="0.01" className={inputClass} value={form.excessKmFee} onChange={(e) => setForm({ ...form, excessKmFee: e.target.value })} placeholder="Ex.: 0,50" />
           </div>
         </div>
 
