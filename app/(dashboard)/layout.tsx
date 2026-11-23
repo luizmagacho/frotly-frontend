@@ -6,19 +6,23 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useSession, signOut, getSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { api } from '@/lib/api-client';
+import { useMe } from '@/lib/use-me';
+import { toast } from 'sonner';
 import {
   LayoutDashboard, Car, Users, FileText, Wrench, AlertTriangle,
   Receipt, Shield, Fuel, Bell, Settings, Menu, X,
   LogOut, Gauge, FileCheck, DollarSign, Sun, Moon,
-  ClipboardCheck, Building2, CalendarCheck, CreditCard,
+  ClipboardCheck, Building2, CalendarCheck, CreditCard, UserCog, History, Eye,
 } from 'lucide-react';
 
-const navGroups = [
+type NavItem = { name: string; href: string; icon: any; adminOnly?: boolean };
+
+const navGroups: { label: string; items: NavItem[] }[] = [
   {
     label: 'Geral',
     items: [
       { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-      { name: 'Planos e Pagamento', href: '/planos', icon: CreditCard },
+      { name: 'Planos e Pagamento', href: '/planos', icon: CreditCard, adminOnly: true },
     ],
   },
   {
@@ -44,7 +48,9 @@ const navGroups = [
       { name: 'Seguros', href: '/seguros', icon: Shield },
       { name: 'Combustível', href: '/abastecimentos', icon: Fuel },
       { name: 'Notificações', href: '/notificacoes', icon: Bell },
-      { name: 'Configurações', href: '/configuracoes', icon: Settings },
+      { name: 'Usuários', href: '/usuarios', icon: UserCog, adminOnly: true },
+      { name: 'Auditoria', href: '/auditoria', icon: History, adminOnly: true },
+      { name: 'Configurações', href: '/configuracoes', icon: Settings, adminOnly: true },
     ],
   },
 ];
@@ -59,6 +65,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [loading, setLoading] = useState(true);
   const [planName, setPlanName] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
+  const me = useMe();
+
+  // Somente leitura não tem telas de cadastro/edição: volta para a listagem.
+  useEffect(() => {
+    if (!me.isReadOnly) return;
+    if (/\/(novo|nova)(\/|$)|\/editar(\/|$)/.test(pathname)) {
+      toast.info('Seu acesso é somente leitura.');
+      router.replace(pathname.replace(/\/editar(\/.*)?$/, '').replace(/\/(novo|nova)(\/.*)?$/, '') || '/dashboard');
+    }
+  }, [me.isReadOnly, pathname, router]);
 
   useEffect(() => {
     if (!session) return;
@@ -69,12 +85,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, [session, pathname]);
 
   useEffect(() => {
-    if (!session) return;
+    if (!session || !me.isAdmin) return;
     api
       .get<any>('/billing/trial/status')
       .then((res) => setPlanName(res?.planName || res?.data?.planName || null))
       .catch(() => setPlanName(null));
-  }, [session]);
+  }, [session, me.isAdmin]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -156,7 +172,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto px-3 py-3.5">
-          {navGroups.map((group) => (
+          {navGroups.map((group) => ({ ...group, items: group.items.filter((i) => !i.adminOnly || me.isAdmin) })).map((group) => (
             <div key={group.label} className="mb-1">
               <div className="px-2.5 pb-1 pt-3 text-[10.5px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                 {group.label}
@@ -202,11 +218,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <button
               onClick={async () => {
                 if (typeof window !== 'undefined') {
-                  localStorage.removeItem('accessToken');
-                  localStorage.removeItem('refreshToken');
+                  // Encerra a sessão ANTES de apagar o token local: sem o token, qualquer
+                  // chamada em andamento pede getSession(), que regrava o cookie da sessão
+                  // e o usuário "volta" logado.
                   try {
                     await signOut({ redirect: false });
-                  } catch (e) {}
+                  } catch {}
+                  localStorage.removeItem('accessToken');
+                  localStorage.removeItem('refreshToken');
                   window.location.href = '/login';
                 }
               }}
@@ -266,8 +285,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </header>
 
+        {me.isReadOnly && (
+          <div className="flex items-center gap-2 border-b border-amber-200 bg-amber-50 px-6 py-2 text-[13px] text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-300">
+            <Eye className="h-4 w-4 shrink-0" />
+            Acesso somente leitura: você pode consultar tudo, mas não alterar. Para editar, peça a um administrador.
+          </div>
+        )}
+
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto bg-white p-6 dark:bg-slate-950">{children}</main>
+        <main
+          data-readonly={me.isReadOnly ? '' : undefined}
+          className="flex-1 overflow-y-auto bg-white p-6 dark:bg-slate-950"
+        >
+          {children}
+        </main>
       </div>
     </div>
   );

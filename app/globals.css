@@ -44,3 +44,26 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+/*
+ * Somente leitura (cargo READ): esconde os controles de criar, editar e excluir em
+ * todas as telas, sem precisar mexer em cada página. A API também recusa (403),
+ * então isto é só para não oferecer o que não vai funcionar.
+ * Para esconder outro controle, marque-o com data-write.
+ */
+[data-readonly] a[href$='/novo'],
+[data-readonly] a[href$='/nova'],
+[data-readonly] a[href*='/novo?'],
+[data-readonly] a[href*='/editar'],
+[data-readonly] a:has(> svg.lucide-plus),
+[data-readonly] button:has(> svg.lucide-plus),
+[data-readonly] button:has(> svg.lucide-trash-2),
+[data-readonly] button:has(> svg.lucide-trash2),
+[data-readonly] button:has(> svg.lucide-trash),
+[data-readonly] button:has(> svg.lucide-pencil),
+[data-readonly] button:has(> svg.lucide-square-pen),
+[data-readonly] a:has(> svg.lucide-square-pen),
+[data-readonly] a:has(> svg.lucide-pencil),
+[data-readonly] [data-write] {
+  display: none !important;
+}

@@ -8,8 +8,11 @@ export default auth((req) => {
     pathname.startsWith('/registro') ||
     pathname.startsWith('/esqueci-senha') ||
     pathname.startsWith('/recuperar-senha');
+  // /definir-senha fica aberta mesmo logado: o convidado pode abrir o link num
+  // navegador onde outra pessoa está logada; a página troca a sessão.
   const isPublicPage =
     pathname === '/' ||
+    pathname.startsWith('/definir-senha') ||
     pathname.startsWith('/api/auth') ||
     pathname.startsWith('/_next') ||
     !!pathname.match(/\.(svg|png|jpg|jpeg|gif|webp|ico)$/);

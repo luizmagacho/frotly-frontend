@@ -175,6 +175,28 @@ class ApiClient {
   delete<T>(endpoint: string) {
     return this.fetch<T>(endpoint, { method: 'DELETE' });
   }
+
+  /** Baixa um arquivo da API (ex.: CSV) com o login atual e salva com o nome indicado. */
+  async download(endpoint: string, params: Record<string, string | number | undefined> | undefined, filename: string) {
+    let token = localStorage.getItem('accessToken') || undefined;
+    if (!token) token = ((await getSession())?.user as any)?.accessToken || undefined;
+    const res = await fetch(this.buildUrl(endpoint, params), {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      credentials: 'include',
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(typeof err.message === 'string' ? err.message : `Erro ao baixar o arquivo (${res.status}).`);
+    }
+    const url = URL.createObjectURL(await res.blob());
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
 }
 
 export const api = new ApiClient();
