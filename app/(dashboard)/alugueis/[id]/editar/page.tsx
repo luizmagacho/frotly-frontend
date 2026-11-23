@@ -7,6 +7,7 @@ import { api } from '@/lib/api-client';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { DateInput } from '@/app/components/date-input';
 
 export default function EditRentalPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -107,11 +108,11 @@ export default function EditRentalPage({ params }: { params: Promise<{ id: strin
           </div>
           <div>
             <label className={labelClass}>Data de Início *</label>
-            <input type="date" className={inputClass} value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} required />
+            <DateInput className={inputClass} value={form.startDate} onChange={(v) => setForm({ ...form, startDate: v })} required />
           </div>
           <div>
             <label className={labelClass}>Data Prevista de Fim</label>
-            <input type="date" className={inputClass} value={form.expectedEndDate} onChange={(e) => setForm({ ...form, expectedEndDate: e.target.value })} />
+            <DateInput className={inputClass} value={form.expectedEndDate} onChange={(v) => setForm({ ...form, expectedEndDate: v })} />
           </div>
         </div>
 

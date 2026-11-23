@@ -8,7 +8,7 @@ import { api } from '@/lib/api-client';
 import { ROLE_LABELS, useMe } from '@/lib/use-me';
 import { DatePicker } from '@/app/components/date-picker';
 
-type Change = { field: string; from: unknown; to: unknown };
+type Change = { field: string; from: unknown; to: unknown; sub?: string; index?: number; hint?: string; op?: 'added' | 'removed' };
 type Log = {
   _id: string;
   createdAt: string;
@@ -31,29 +31,139 @@ const ACTIONS: Record<Log['action'], { label: string; cls: string }> = {
   DELETE: { label: 'Excluiu', cls: 'bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-300' },
 };
 
-/** Nomes legíveis dos campos mais comuns. Os demais aparecem como estão no banco. */
+/** Nomes dos campos em português (todos os módulos). */
 const FIELD_LABELS: Record<string, string> = {
-  name: 'Nome', email: 'E-mail', phone: 'Telefone', role: 'Cargo', isActive: 'Ativo', pendingInvite: 'Convite pendente',
-  invitedAt: 'Convidado em', deactivatedAt: 'Desativado em', status: 'Status', licensePlate: 'Placa', color: 'Cor',
-  brand: 'Marca', model: 'Modelo', year: 'Ano', renavam: 'Renavam', chassis: 'Chassi', currentMileage: 'Km atual',
-  mileage: 'Km', amount: 'Valor', value: 'Valor', weeklyAmount: 'Valor semanal', dueDate: 'Vencimento', paidAt: 'Pago em',
-  date: 'Data', startDate: 'Início', endDate: 'Fim', description: 'Descrição', notes: 'Observações', type: 'Tipo',
-  category: 'Categoria', document: 'Documento', cpf: 'CPF', cnh: 'CNH', vehicleId: 'Veículo', driverId: 'Motorista',
-  customerId: 'Cliente', weeklyKmLimit: 'Limite de km/semana', excessKmFee: 'Valor do km excedente', cost: 'Custo',
-  noticeNumber: 'Auto de infração', points: 'Pontos', insurer: 'Seguradora', fipeCode: 'Código FIPE',
+  // Geral
+  name: 'Nome', email: 'E-mail', phone: 'Telefone', status: 'Status', type: 'Tipo', category: 'Categoria',
+  description: 'Descrição', notes: 'Observações', observations: 'Observações', title: 'Título', date: 'Data',
+  startDate: 'Início', endDate: 'Fim', dueDate: 'Vencimento', paidAt: 'Pago em', amount: 'Valor', value: 'Valor',
+  cost: 'Custo', year: 'Ano', document: 'Documento', number: 'Número', street: 'Rua', address: 'Endereço',
+  city: 'Cidade', zipCode: 'CEP', isActive: 'Ativo', location: 'Local', source: 'Origem', metadata: 'Detalhes',
+  // Usuários
+  role: 'Cargo', pendingInvite: 'Convite pendente', invitedAt: 'Convidado em', invitedBy: 'Convidado por',
+  deactivatedAt: 'Desativado em',
+  // Veículos
+  licensePlate: 'Placa', brand: 'Marca', model: 'Modelo', modelYear: 'Ano do modelo', color: 'Cor', renavam: 'Renavam',
+  chassis: 'Chassi', mileage: 'Quilometragem', currentMileage: 'Km atual', fuelType: 'Combustível', transmission: 'Câmbio',
+  seats: 'Lugares', photos: 'Fotos', currentDriverId: 'Motorista atual', purchaseValue: 'Valor de compra',
+  currentValue: 'Valor atual', fipeCode: 'Código FIPE', fipeModelName: 'Versão FIPE', fipeYearCode: 'Ano FIPE',
+  crlvDocument: 'CRLV', insuranceDocument: 'Apólice (arquivo)', insuranceExpiration: 'Vencimento do seguro',
+  ipvaDueDate: 'Vencimento do IPVA', licensingDueDate: 'Vencimento do licenciamento',
+  nextMaintenanceDate: 'Próxima manutenção', nextMaintenanceMileage: 'Km da próxima manutenção',
+  // Motoristas
+  cpf: 'CPF', cnh: 'CNH', licenseNumber: 'Nº da CNH', licenseCategory: 'Categoria da CNH',
+  licenseExpiration: 'Validade da CNH', licenseDocument: 'CNH (arquivo)', profilePhoto: 'Foto', rating: 'Avaliação',
+  platforms: 'Plataformas',
+  // Clientes e reservas
+  customerId: 'Cliente', estimatedAmount: 'Valor estimado',
+  // Aluguéis
+  vehicleId: 'Veículo', driverId: 'Motorista', rentalId: 'Aluguel', rentalAmount: 'Valor do aluguel',
+  weeklyAmount: 'Valor semanal', paymentFrequency: 'Frequência de pagamento', paymentMethod: 'Forma de pagamento',
+  securityDeposit: 'Caução', expectedEndDate: 'Término previsto', payments: 'Pagamentos', fine: 'Multa por atraso',
+  contractPath: 'Contrato', receiptPath: 'Comprovante', mileageLogs: 'Registros de km', previousMileage: 'Km anterior',
+  newMileage: 'Km novo', kmDriven: 'Km rodados', weeklyKmLimit: 'Limite de km/semana', excessKmFee: 'Valor do km excedente',
+  // Manutenções
+  scheduledDate: 'Data agendada', completedDate: 'Concluída em', workshopName: 'Oficina', workshopPhone: 'Telefone da oficina',
+  services: 'Serviços', parts: 'Peças', mileageAtService: 'Km no serviço', nextServiceDate: 'Próxima revisão',
+  nextServiceMileage: 'Km da próxima revisão',
+  // Abastecimentos
+  volume: 'Litros', pricePerUnit: 'Preço por litro', totalCost: 'Valor total', stationName: 'Posto', isFullTank: 'Tanque cheio',
+  // Financeiro, IPVA, licenciamento, seguro
+  sourceId: 'Origem', installments: 'Parcelas', installmentNumber: 'Parcela', totalAmount: 'Valor total', discount: 'Desconto',
+  financialEntryId: 'Lançamento', provider: 'Seguradora', insurer: 'Seguradora', policyNumber: 'Nº da apólice',
+  coverageType: 'Cobertura', franchiseAmount: 'Franquia', brokerName: 'Corretor', brokerPhone: 'Telefone do corretor',
+  // Multas
+  noticeNumber: 'Auto de infração', infractionCode: 'Código da infração', infractionDate: 'Data da infração',
+  issuingAgency: 'Órgão autuador', points: 'Pontos', driverIndicated: 'Condutor indicado', chargeToDriver: 'Cobrar do motorista',
+  driverChargeStatus: 'Cobrança do motorista', driverChargeRef: 'Referência da cobrança',
+  // Vistorias
+  inspectorName: 'Vistoriador', fuelLevel: 'Combustível', signature: 'Assinatura', photoUrl: 'Foto',
+  // Locadora
+  cnpj: 'CNPJ', contactEmail: 'E-mail de contato', contactPhone: 'Telefone de contato', plan: 'Plano',
+  legalRepresentativeName: 'Representante legal', subdomain: 'Subdomínio', logoUrl: 'Logo', primaryColor: 'Cor principal',
 };
 
+/** Como chamar um item de cada lista ("Pagamento 3"). */
+const ITEM_LABELS: Record<string, string> = {
+  payments: 'Pagamento', mileageLogs: 'Registro de km', services: 'Serviço', parts: 'Peça', photos: 'Foto',
+  installments: 'Parcela', platforms: 'Plataforma',
+};
+
+/** Valores fixos (status, tipos) em português. */
+const VALUE_LABELS: Record<string, string> = {
+  ACTIVE: 'Ativo', INACTIVE: 'Inativo', SUSPENDED: 'Suspenso', PENDING: 'Pendente', PAID: 'Pago', OVERDUE: 'Atrasado',
+  CANCELLED: 'Cancelado', COMPLETED: 'Concluído', CONFIRMED: 'Confirmada', SCHEDULED: 'Agendada', IN_PROGRESS: 'Em andamento',
+  APPEALED: 'Recorrida', EXPIRED: 'Vencido', AVAILABLE: 'Disponível', RENTED: 'Alugado', MAINTENANCE: 'Em manutenção',
+  INCOME: 'Receita', EXPENSE: 'Despesa', PREVENTIVE: 'Preventiva', CORRECTIVE: 'Corretiva', INSPECTION: 'Vistoria',
+  WEEKLY: 'Semanal', BIWEEKLY: 'Quinzenal', MONTHLY: 'Mensal', PIX: 'Pix', CASH: 'Dinheiro', BOLETO: 'Boleto',
+  CREDIT_CARD: 'Cartão de crédito', DEBIT_CARD: 'Cartão de débito', TRANSFER: 'Transferência',
+  GASOLINE: 'Gasolina', ETHANOL: 'Etanol', DIESEL: 'Diesel', FLEX: 'Flex', ELECTRIC: 'Elétrico', HYBRID: 'Híbrido', CNG: 'GNV',
+  MANUAL: 'Manual', AUTOMATIC: 'Automático', CVT: 'CVT', PF: 'Pessoa física', PJ: 'Pessoa jurídica',
+  BASIC: 'Básico', PRO: 'Pro', ENTERPRISE: 'Enterprise', SYSTEM: 'Sistema', USER: 'Usuário',
+  monthly: 'Mensal', annual: 'Anual', annual_installments: 'Anual parcelado',
+};
+
+const MONEY_FIELDS = new Set([
+  'amount', 'value', 'cost', 'rentalAmount', 'weeklyAmount', 'securityDeposit', 'fine', 'totalCost', 'pricePerUnit',
+  'estimatedAmount', 'franchiseAmount', 'purchaseValue', 'currentValue', 'excessKmFee', 'discount', 'totalAmount',
+]);
+const KM_FIELDS = new Set(['mileage', 'currentMileage', 'previousMileage', 'newMileage', 'kmDriven', 'weeklyKmLimit', 'mileageAtService', 'nextServiceMileage', 'nextMaintenanceMileage']);
+const REF_FIELDS = new Set(['vehicleId', 'driverId', 'customerId', 'rentalId', 'currentDriverId', 'invitedBy', 'sourceId', 'financialEntryId', '_id']);
+
+const fieldLabel = (f: string) => {
+  const parts = f.split('.');
+  return parts.map((p) => FIELD_LABELS[p] ?? p).join(' › ');
+};
+const lastKey = (f: string) => f.split('.').pop() ?? f;
+
 const isoDate = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
-function fmtValue(field: string, v: unknown): string {
+function fmtDate(v: string, field: string): string {
+  const d = new Date(v);
+  if (isNaN(d.getTime())) return v;
+  // Datas "puras" (vencimento, validade) são gravadas à meia-noite UTC: mostra o dia sem fuso.
+  if (d.getUTCHours() === 0 && d.getUTCMinutes() === 0 && d.getUTCSeconds() === 0) return d.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+  // Campos "...At" são momentos (pago em, convidado em): data e hora. Os demais, só o dia.
+  if (/At$/.test(field)) return d.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', dateStyle: 'short', timeStyle: 'short' });
+  return d.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+}
+
+function fmtValue(fieldPath: string, v: unknown): string {
+  const field = lastKey(fieldPath);
   if (v === null || v === undefined || v === '') return '—';
   if (typeof v === 'boolean') return v ? 'Sim' : 'Não';
-  if (field === 'role' && typeof v === 'string') return ROLE_LABELS[v] ?? v;
-  if (typeof v === 'string' && isoDate.test(v)) {
-    const d = new Date(v);
-    return d.getUTCHours() === 0 && d.getUTCMinutes() === 0 ? d.toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : d.toLocaleString('pt-BR');
+  if (Array.isArray(v)) return v.length ? v.map((x) => fmtValue(field, x)).join(', ') : '—';
+  if (typeof v === 'object') {
+    const o = v as Record<string, unknown>;
+    if (typeof o.count === 'number' && Object.keys(o).length === 1) return `${o.count} ${o.count === 1 ? 'item' : 'itens'}`;
+    return Object.entries(o).map(([k, x]) => `${fieldLabel(k)}: ${fmtValue(k, x)}`).join(' · ');
   }
-  if (typeof v === 'number') return v.toLocaleString('pt-BR');
-  return String(v);
+  if (field === 'role' && typeof v === 'string') return ROLE_LABELS[v] ?? v;
+  if (typeof v === 'number') {
+    if (MONEY_FIELDS.has(field)) return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    if (KM_FIELDS.has(field)) return `${v.toLocaleString('pt-BR')} km`;
+    return v.toLocaleString('pt-BR');
+  }
+  const s = String(v);
+  if (isoDate.test(s)) return fmtDate(s, field);
+  if (REF_FIELDS.has(field) && /^[a-f0-9]{24}$/.test(s)) return `#${s.slice(-6)}`;
+  if (VALUE_LABELS[s]) return VALUE_LABELS[s];
+  // Registros antigos guardavam listas inteiras como texto cortado: não dá para detalhar.
+  if (/^[[{]/.test(s) && s.endsWith('…')) return '(lista alterada; detalhes não disponíveis neste registro antigo)';
+  if (/^\[/.test(s)) {
+    try {
+      const arr = JSON.parse(s);
+      if (Array.isArray(arr)) return `${arr.length} ${arr.length === 1 ? 'item' : 'itens'}`;
+    } catch { /* texto comum */ }
+  }
+  return s;
+}
+
+/** "Pagamento 3 (venc. 21/05/2026)" */
+function itemTitle(c: Change): string {
+  const base = `${ITEM_LABELS[c.field] ?? fieldLabel(c.field)} ${c.index}`;
+  if (!c.hint) return base;
+  const hint = isoDate.test(c.hint) ? `${c.field === 'payments' ? 'venc. ' : ''}${fmtDate(c.hint, 'dueDate')}` : c.hint;
+  return `${base} (${hint})`;
 }
 
 const toApiDate = (br: string) => {
@@ -66,15 +176,15 @@ const selectCls =
 
 function ChangeList({ log }: { log: Log }) {
   if (log.action === 'DELETE' && log.snapshot) {
-    const rows = Object.entries(log.snapshot).filter(([k, v]) => k !== '_id' && v !== null && v !== '');
+    const rows = Object.entries(log.snapshot).filter(([k, v]) => k !== '_id' && v !== null && v !== '' && !(Array.isArray(v) && !v.length));
     return (
       <div>
         <p className="mb-2 text-xs font-semibold uppercase text-slate-500 dark:text-slate-400">Cópia do registro excluído</p>
         <dl className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
           {rows.map(([k, v]) => (
             <div key={k} className="flex gap-2 text-xs">
-              <dt className="shrink-0 text-slate-500 dark:text-slate-400">{FIELD_LABELS[k] ?? k}:</dt>
-              <dd className="break-all text-slate-800 dark:text-slate-200">{fmtValue(k, v)}</dd>
+              <dt className="shrink-0 text-slate-500 dark:text-slate-400">{fieldLabel(k)}:</dt>
+              <dd className="break-words text-slate-800 dark:text-slate-200">{fmtValue(k, v)}</dd>
             </div>
           ))}
         </dl>
@@ -92,13 +202,30 @@ function ChangeList({ log }: { log: Log }) {
         </tr>
       </thead>
       <tbody>
-        {log.changes.map((c) => (
-          <tr key={c.field} className="align-top">
-            <td className="py-1 pr-4 font-medium text-slate-700 dark:text-slate-300">{FIELD_LABELS[c.field] ?? c.field}</td>
-            <td className="break-all py-1 pr-4 text-slate-500 line-through decoration-slate-300 dark:text-slate-400 dark:decoration-slate-600">{fmtValue(c.field, c.from)}</td>
-            <td className="break-all py-1 text-slate-900 dark:text-white">{fmtValue(c.field, c.to)}</td>
-          </tr>
-        ))}
+        {log.changes.map((c, i) => {
+          const key = `${c.field}.${c.index ?? ''}.${c.sub ?? ''}.${c.op ?? ''}.${i}`;
+          const valueField = c.sub ?? c.field;
+          let title: React.ReactNode = fieldLabel(c.field);
+          if (c.index) {
+            title = (
+              <>
+                {itemTitle(c)}
+                <span className="block font-normal text-slate-500 dark:text-slate-400">
+                  {c.op === 'added' ? 'Adicionado' : c.op === 'removed' ? 'Removido' : fieldLabel(c.sub ?? '')}
+                </span>
+              </>
+            );
+          } else if (c.sub) {
+            title = `${fieldLabel(c.field)} › ${fieldLabel(c.sub)}`;
+          }
+          return (
+            <tr key={key} className="align-top">
+              <td className="py-1 pr-4 font-medium text-slate-700 dark:text-slate-300">{title}</td>
+              <td className="break-words py-1 pr-4 text-slate-500 line-through decoration-slate-300 dark:text-slate-400 dark:decoration-slate-600">{fmtValue(valueField, c.from)}</td>
+              <td className="break-words py-1 text-slate-900 dark:text-white">{fmtValue(valueField, c.to)}</td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
@@ -149,7 +276,8 @@ export default function AuditoriaPage() {
     }
   };
 
-  if (me.loaded && !me.isAdmin) {
+  if (!me.loaded) return null;
+  if (!me.isAdmin) {
     return <p className="text-sm text-slate-500 dark:text-slate-400">Apenas administradores podem ver a auditoria.</p>;
   }
 
@@ -243,7 +371,7 @@ export default function AuditoriaPage() {
                 const expanded = open === log._id;
                 const summary =
                   log.action === 'UPDATE'
-                    ? log.changes.map((c) => FIELD_LABELS[c.field] ?? c.field).join(', ')
+                    ? [...new Set(log.changes.map((c) => (c.index ? `${ITEM_LABELS[c.field] ?? fieldLabel(c.field)} ${c.index}` : fieldLabel(c.sub ? `${c.field}.${c.sub}` : c.field))))].join(', ')
                     : log.action === 'DELETE'
                       ? 'Ver cópia do registro'
                       : '—';

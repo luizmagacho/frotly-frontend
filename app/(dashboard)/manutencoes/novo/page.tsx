@@ -7,6 +7,7 @@ import { api } from '@/lib/api-client';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { DateInput } from '@/app/components/date-input';
 
 const typeLabels: Record<string, string> = {
   PREVENTIVE: 'Preventiva',
@@ -115,7 +116,7 @@ export default function NewMaintenancePage() {
           </div>
           <div>
             <label className={labelClass}>Data Agendada *</label>
-            <input type="date" className={inputClass} value={form.scheduledDate} onChange={(e) => setForm({ ...form, scheduledDate: e.target.value })} required />
+            <DateInput className={inputClass} value={form.scheduledDate} onChange={(v) => setForm({ ...form, scheduledDate: v })} required />
           </div>
           <div>
             <label className={labelClass}>Quilometragem no Serviço (km)</label>
@@ -148,7 +149,7 @@ export default function NewMaintenancePage() {
           </div>
           <div>
             <label className={labelClass}>Próxima Manutenção — Data</label>
-            <input type="date" className={inputClass} value={form.nextServiceDate} onChange={(e) => setForm({ ...form, nextServiceDate: e.target.value })} />
+            <DateInput className={inputClass} value={form.nextServiceDate} onChange={(v) => setForm({ ...form, nextServiceDate: v })} />
           </div>
           <div>
             <label className={labelClass}>Próxima Manutenção — KM</label>

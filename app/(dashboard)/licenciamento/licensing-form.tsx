@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { ArrowLeft } from 'lucide-react';
 import { api } from '@/lib/api-client';
+import { DateInput } from '@/app/components/date-input';
 
 const STATUS = [
   { value: 'PENDING', label: 'A pagar' },
@@ -124,7 +125,7 @@ export function LicensingForm({ licensing, presetVehicleId }: { licensing?: any;
           </div>
           <div>
             <label htmlFor="dueDate" className={labelClass}>Vencimento *</label>
-            <input id="dueDate" type="date" className={inputClass} value={form.dueDate} onChange={(e) => set('dueDate', e.target.value)} />
+            <DateInput id="dueDate" className={inputClass} value={form.dueDate} onChange={(v) => set('dueDate', v)} />
           </div>
           <div>
             <label htmlFor="status" className={labelClass}>Situação</label>

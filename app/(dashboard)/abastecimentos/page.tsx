@@ -5,6 +5,7 @@ import { Fuel, Plus, X, Search, Calendar, MapPin, Gauge, Droplet, CreditCard, Ch
 import { api } from '@/lib/api-client';
 import { toast } from 'sonner';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import { DateInput } from '@/app/components/date-input';
 
 export default function RefuelsPage() {
   const [showModal, setShowModal] = useState(false);
@@ -302,11 +303,10 @@ export default function RefuelsPage() {
                     <Calendar className="h-4 w-4 text-slate-400" />
                     Data do Abastecimento *
                   </label>
-                  <input
-                    type="date"
+                  <DateInput
                     required
                     value={date}
-                    onChange={(e) => setDate(e.target.value)}
+                    onChange={(v) => setDate(v)}
                     className="w-full p-2.5 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>

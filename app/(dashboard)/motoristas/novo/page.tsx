@@ -7,6 +7,7 @@ import { api } from '@/lib/api-client';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { DateInput } from '@/app/components/date-input';
 
 export default function NewDriverPage() {
   const router = useRouter();
@@ -184,7 +185,7 @@ export default function NewDriverPage() {
           </div>
           <div>
             <label className={labelClass}>Validade *</label>
-            <input type="date" className={inputClass} value={form.licenseExpiration} onChange={(e) => setForm({ ...form, licenseExpiration: e.target.value })} required />
+            <DateInput className={inputClass} value={form.licenseExpiration} onChange={(v) => setForm({ ...form, licenseExpiration: v })} required />
           </div>
         </div>
 

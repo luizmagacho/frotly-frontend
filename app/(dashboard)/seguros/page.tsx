@@ -6,6 +6,7 @@ import { api } from '@/lib/api-client';
 import { Shield, Plus, X, Search, Calendar, Phone, CheckCircle, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { formatCurrency, formatDate } from '@/lib/utils';
+import { DateInput } from '@/app/components/date-input';
 
 export default function InsurancePage() {
   const [showModal, setShowModal] = useState(false);
@@ -254,12 +255,12 @@ function NewInsuranceModal({ onClose }: { onClose: () => void }) {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Data de Início <span className="text-red-500">*</span></label>
-                <input type="date" required value={startDate} onChange={(e) => setStartDate(e.target.value)}
+                <DateInput required value={startDate} onChange={(v) => setStartDate(v)}
                   className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Data de Vencimento <span className="text-red-500">*</span></label>
-                <input type="date" required value={endDate} onChange={(e) => setEndDate(e.target.value)}
+                <DateInput required value={endDate} onChange={(v) => setEndDate(v)}
                   className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none dark:border-slate-800 dark:bg-slate-950 dark:text-white" />
               </div>
             </div>

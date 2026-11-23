@@ -55,32 +55,32 @@ export default function NovoClientePage() {
       <div className="flex items-center gap-4 mb-8">
         <Link 
           href="/clientes"
-          className="p-2 hover:bg-slate-800 rounded-lg text-gray-400 hover:text-white transition-colors"
+          className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white transition-colors"
         >
           <ArrowLeft className="h-6 w-6" />
         </Link>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-2">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
             Novo Cliente
           </h1>
-          <p className="text-gray-400 mt-2">
+          <p className="text-slate-500 dark:text-slate-400 mt-2">
             Cadastre um novo cliente no sistema
           </p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 backdrop-blur-sm space-y-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Informações Principais</h2>
+        <div className="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl p-6 backdrop-blur-sm space-y-6">
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">Informações Principais</h2>
           
-          <div className="flex gap-4 p-1 bg-slate-900 rounded-lg w-fit mb-6">
+          <div className="flex gap-4 p-1 bg-slate-100 dark:bg-slate-900 rounded-lg w-fit mb-6">
             <button
               type="button"
               onClick={() => setType('PF')}
               className={`flex items-center gap-2 px-6 py-2 rounded-md transition-all ${
                 type === 'PF' 
                   ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
-                  : 'text-gray-400 hover:text-white hover:bg-slate-800'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white dark:text-gray-400 dark:hover:text-white dark:hover:bg-slate-800'
               }`}
             >
               <User className="h-4 w-4" />
@@ -92,7 +92,7 @@ export default function NovoClientePage() {
               className={`flex items-center gap-2 px-6 py-2 rounded-md transition-all ${
                 type === 'PJ' 
                   ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20' 
-                  : 'text-gray-400 hover:text-white hover:bg-slate-800'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white dark:text-gray-400 dark:hover:text-white dark:hover:bg-slate-800'
               }`}
             >
               <Building2 className="h-4 w-4" />
@@ -102,7 +102,7 @@ export default function NovoClientePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                 {type === 'PF' ? 'Nome Completo' : 'Razão Social'} <span className="text-red-500">*</span>
               </label>
               <input
@@ -110,13 +110,13 @@ export default function NovoClientePage() {
                 required
                 value={formData.name}
                 onChange={e => setFormData({...formData, name: e.target.value})}
-                className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:border-red-500 dark:bg-slate-900 dark:border-slate-700 dark:text-white"
                 placeholder={type === 'PF' ? "Ex: João da Silva" : "Ex: Empresa Ltda"}
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                 {type === 'PF' ? 'CPF' : 'CNPJ'} <span className="text-red-500">*</span>
               </label>
               <input
@@ -124,74 +124,74 @@ export default function NovoClientePage() {
                 required
                 value={formData.document}
                 onChange={e => setFormData({...formData, document: handleMaskDocument(e.target.value)})}
-                className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:border-red-500 dark:bg-slate-900 dark:border-slate-700 dark:text-white"
                 placeholder={type === 'PF' ? "Apenas números" : "Apenas números"}
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">E-mail</label>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">E-mail</label>
               <input
                 type="email"
                 value={formData.email}
                 onChange={e => setFormData({...formData, email: e.target.value})}
-                className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:border-red-500 dark:bg-slate-900 dark:border-slate-700 dark:text-white"
                 placeholder="email@exemplo.com"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Telefone</label>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Telefone</label>
               <input
                 type="text"
                 value={formData.phone}
                 onChange={e => setFormData({...formData, phone: e.target.value})}
-                className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:border-red-500 dark:bg-slate-900 dark:border-slate-700 dark:text-white"
                 placeholder="(00) 00000-0000"
               />
             </div>
           </div>
         </div>
 
-        <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 backdrop-blur-sm space-y-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Endereço (Opcional)</h2>
+        <div className="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-xl p-6 backdrop-blur-sm space-y-6">
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">Endereço (Opcional)</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Rua</label>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Rua</label>
               <input
                 type="text"
                 value={formData.address.street}
                 onChange={e => setFormData({...formData, address: {...formData.address, street: e.target.value}})}
-                className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:border-red-500 dark:bg-slate-900 dark:border-slate-700 dark:text-white"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Número</label>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Número</label>
               <input
                 type="text"
                 value={formData.address.number}
                 onChange={e => setFormData({...formData, address: {...formData.address, number: e.target.value}})}
-                className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:border-red-500 dark:bg-slate-900 dark:border-slate-700 dark:text-white"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Cidade</label>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Cidade</label>
               <input
                 type="text"
                 value={formData.address.city}
                 onChange={e => setFormData({...formData, address: {...formData.address, city: e.target.value}})}
-                className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:border-red-500 dark:bg-slate-900 dark:border-slate-700 dark:text-white"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Estado (UF)</label>
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Estado (UF)</label>
               <input
                 type="text"
                 maxLength={2}
                 value={formData.address.state}
                 onChange={e => setFormData({...formData, address: {...formData.address, state: e.target.value.toUpperCase()}})}
-                className="w-full px-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-900 focus:outline-none focus:border-red-500 dark:bg-slate-900 dark:border-slate-700 dark:text-white"
                 placeholder="SP"
               />
             </div>
@@ -201,7 +201,7 @@ export default function NovoClientePage() {
         <div className="flex justify-end gap-4">
           <Link
             href="/clientes"
-            className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-colors font-medium"
+            className="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white rounded-lg transition-colors font-medium"
           >
             Cancelar
           </Link>

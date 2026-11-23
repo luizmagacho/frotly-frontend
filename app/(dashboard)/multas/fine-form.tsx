@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { ArrowLeft, UserCheck, UserX } from 'lucide-react';
 import { api } from '@/lib/api-client';
+import { DateInput } from '@/app/components/date-input';
 
 export const AGENCIES = ['DETRAN-PR', 'PRF', 'DER-PR', 'Setran Curitiba', 'Prefeitura (trânsito municipal)', 'Outro'];
 /** Pontos por gravidade no CTB: leve 3, média 4, grave 5, gravíssima 7. */
@@ -177,7 +178,7 @@ export function FineForm({ fine }: { fine?: any }) {
           </div>
           <div>
             <label htmlFor="infractionDate" className={labelClass}>Data da infração *</label>
-            <input id="infractionDate" type="date" className={inputClass} value={form.infractionDate} onChange={(e) => set('infractionDate', e.target.value)} />
+            <DateInput id="infractionDate" className={inputClass} value={form.infractionDate} onChange={(v) => set('infractionDate', v)} />
           </div>
 
           <div className="md:col-span-2">
@@ -248,7 +249,7 @@ export function FineForm({ fine }: { fine?: any }) {
           </div>
           <div>
             <label htmlFor="dueDate" className={labelClass}>Vencimento</label>
-            <input id="dueDate" type="date" className={inputClass} value={form.dueDate} onChange={(e) => set('dueDate', e.target.value)} />
+            <DateInput id="dueDate" className={inputClass} value={form.dueDate} onChange={(v) => set('dueDate', v)} />
           </div>
           <div>
             <label htmlFor="status" className={labelClass}>Situação</label>

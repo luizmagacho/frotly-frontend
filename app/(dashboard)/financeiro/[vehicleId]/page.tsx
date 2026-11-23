@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Plus, TrendingUp, TrendingDown, Wallet, Trash2, X, ArrowLeft } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/shared-utils';
 import { toast } from 'sonner';
+import { DateInput } from '@/app/components/date-input';
 
 const categoryLabels: Record<string, string> = {
   SEGURO: 'Seguro',
@@ -99,7 +100,7 @@ function NewEntryModal({ vehicleId, onClose }: { vehicleId: string; onClose: () 
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Data</label>
-              <input type="date" required value={date} onChange={(e) => setDate(e.target.value)}
+              <DateInput required value={date} onChange={(v) => setDate(v)}
                 className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-white" />
             </div>
           </div>
